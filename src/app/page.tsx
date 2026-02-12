@@ -1,65 +1,112 @@
-import Image from "next/image";
+import Link from "next/link";
+import { ArrowRight, BrainCircuit, ChartLine, FolderKanban, Sparkles, Target } from "lucide-react";
+import { getSession } from "@/lib/auth";
+import { Card, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { MagicDock } from "@/components/landing/magic-dock";
+import { FlickeringGrid } from "@/components/magicui/flickering-grid";
+import { Button } from "@/components/ui/button";
 
-export default function Home() {
+const highlights = [
+  {
+    title: "Adaptive Roadmaps",
+    description: "Break your AI/ML journey into focused phases and reorder topics as your goals change.",
+    icon: Target,
+  },
+  {
+    title: "Progress Intelligence",
+    description: "Track in-progress, completed, and mastered topics with visual analytics across your plan.",
+    icon: ChartLine,
+  },
+  {
+    title: "Resource Library",
+    description: "Attach notes, links, and files to each topic so your study material stays organized.",
+    icon: FolderKanban,
+  },
+] as const;
+
+export default async function HomePage() {
+  const session = await getSession();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+    <>
+      <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-12 pb-28 sm:py-16 sm:pb-32">
+        <section className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+          <div className="space-y-6">
+            <Badge className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs uppercase tracking-wide">
+              <Sparkles className="size-3.5" />
+              Magic UI Integrated
+            </Badge>
+            <div className="space-y-4">
+              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
+                Build your AI/ML roadmap with a cleaner UI and consistent design system.
+              </h1>
+              <p className="max-w-2xl text-balance text-muted-foreground sm:text-lg">
+                The project now uses the Magic-style visual language for layout and styling while keeping your current auth and dashboard flows intact.
+              </p>
+            </div>
+            <div className="flex flex-wrap items-center gap-3">
+              <Button asChild size="lg">
+                <Link href={session?.user?.id ? "/dashboard" : "/login"}>
+                  {session?.user?.id ? "Open Dashboard" : "Sign In to Continue"}
+                  <ArrowRight className="ml-2 size-4" />
+                </Link>
+              </Button>
+              {!session?.user?.id ? (
+                <Button asChild variant="outline" size="lg">
+                  <Link href="/dashboard">Preview Dashboard Route</Link>
+                </Button>
+              ) : null}
+            </div>
+          </div>
+
+          <div className="relative overflow-hidden rounded-2xl border bg-card p-8">
+            <div className="pointer-events-none absolute inset-0 top-0 left-0 right-0 h-1/2 overflow-hidden">
+              <FlickeringGrid
+                className="h-full w-full"
+                squareSize={2}
+                gridGap={2}
+                style={{
+                  maskImage: "linear-gradient(to bottom, black, transparent)",
+                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
+                }}
+              />
+            </div>
+            <div className="relative space-y-4">
+              <div className="inline-flex size-11 items-center justify-center rounded-full border bg-background">
+                <BrainCircuit className="size-5" />
+              </div>
+              <h2 className="text-xl font-semibold">Archievr AI Platform</h2>
+              <p className="text-sm text-muted-foreground">
+                Organize your roadmap, track progress, and keep every resource aligned to the exact topic you are learning.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="space-y-8">
+          <div className="flex items-center gap-4">
+            <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
+            <span className="rounded-xl border bg-primary px-3 py-1 text-xs font-medium text-background">
+              Core Highlights
+            </span>
+            <div className="h-px flex-1 bg-linear-to-l from-transparent via-border to-transparent" />
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-3">
+            {highlights.map((item) => (
+              <Card key={item.title} className="h-full rounded-xl border p-5">
+                <div className="mb-4 inline-flex size-9 items-center justify-center rounded-full border bg-background">
+                  <item.icon className="size-4" />
+                </div>
+                <CardTitle className="mb-2">{item.title}</CardTitle>
+                <p className="text-sm text-muted-foreground">{item.description}</p>
+              </Card>
+            ))}
+          </div>
+        </section>
       </main>
-    </div>
+      <MagicDock />
+    </>
   );
 }
