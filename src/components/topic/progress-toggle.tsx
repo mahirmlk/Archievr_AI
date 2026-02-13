@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ProgressStatus } from "@/types/roadmap";
 
@@ -14,6 +15,7 @@ export function ProgressToggle({
   onUpdate: (status: ProgressStatus) => Promise<void>;
 }) {
   const [value, setValue] = useState<ProgressStatus>(initial);
+
   return (
     <div className="flex flex-wrap gap-2">
       {statuses.map((status) => (
@@ -29,6 +31,7 @@ export function ProgressToggle({
           {status.replace("_", " ")}
         </Button>
       ))}
+      <Badge>Current: {value.replace("_", " ")}</Badge>
     </div>
   );
 }

@@ -2,43 +2,42 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { BarChart3, BookOpen, Compass, Home, Settings, Wrench } from "lucide-react";
+import { Compass, LayoutDashboard, Map, BookOpen } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-  { href: "/dashboard", label: "Dashboard", icon: Home },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/roadmap", label: "Roadmap", icon: Map },
   { href: "/resources", label: "Resources", icon: BookOpen },
-  { href: "/analytics", label: "Analytics", icon: BarChart3 },
-  { href: "/settings", label: "Settings", icon: Settings },
-];
+] as const;
 
 export function Sidebar() {
   const pathname = usePathname();
-  const roadmapActive = pathname.startsWith("/roadmap");
 
   return (
-    <aside className="w-full rounded-2xl border bg-card/80 backdrop-blur-xl md:sticky md:top-6 md:h-[calc(100dvh-3rem)] md:w-72">
-      <div className="flex items-center gap-2 border-b p-4">
-        <div className="rounded-lg border bg-background p-2">
+    <aside className="w-full rounded-2xl border border-neutral-800 bg-neutral-900/50 backdrop-blur-sm md:sticky md:top-6 md:h-[calc(100dvh-3rem)] md:w-72">
+      <div className="flex items-center gap-3 border-b border-neutral-800 p-5">
+        <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-300">
           <Compass className="h-4 w-4" />
         </div>
         <div>
-          <p className="text-sm font-semibold">Archievr AI</p>
-          <p className="text-xs text-muted-foreground">Machine Learning Engineer Roadmap</p>
+          <p className="text-sm font-semibold text-zinc-100">Archievr AI</p>
+          <p className="font-mono text-xs text-neutral-500">/ML-Roadmap</p>
         </div>
       </div>
       <nav className="grid gap-1 p-3">
         {navItems.map((item) => {
           const Icon = item.icon;
+          const isActive = pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}
               href={item.href}
               className={cn(
-                "flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-colors",
-                pathname.startsWith(item.href)
-                  ? "bg-primary text-primary-foreground"
-                  : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                "flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition-all duration-300",
+                isActive
+                  ? "border-neutral-700 bg-neutral-800 text-white"
+                  : "border-transparent text-neutral-400 hover:border-neutral-800 hover:bg-neutral-900 hover:text-white",
               )}
             >
               <Icon className="h-4 w-4" />
@@ -46,17 +45,6 @@ export function Sidebar() {
             </Link>
           );
         })}
-        <div className="my-2 border-t" />
-        <Link
-          href="/roadmap"
-          className={cn(
-            "flex items-center gap-2 rounded-xl px-3 py-2 text-sm transition-colors",
-            roadmapActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          )}
-        >
-          <Wrench className="h-4 w-4" />
-          Roadmap
-        </Link>
       </nav>
     </aside>
   );

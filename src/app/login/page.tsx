@@ -18,8 +18,8 @@ function authErrorMessage(error?: string | null) {
     OAuthSignin: "OAuth sign-in could not be started.",
     OAuthCallback: "OAuth callback failed. Check your provider redirect URI.",
     OAuthCreateAccount: "Account creation from OAuth failed.",
-    OAuthAccountNotLinked: "This email is already linked to another provider. Use the same provider or enable account linking.",
-    Configuration: "Auth configuration error. Check NEXTAUTH_URL, NEXTAUTH_SECRET and provider credentials.",
+    OAuthAccountNotLinked: "This email is already linked to another provider.",
+    Configuration: "Auth configuration error.",
     AccessDenied: "Access was denied by the auth provider.",
     Verification: "Verification failed. Try signing in again.",
     Default: "Sign in failed. Please try again.",
@@ -56,35 +56,35 @@ export default function LoginPage() {
   }, []);
 
   return (
-    <main className="mx-auto grid min-h-screen w-full max-w-5xl items-center gap-10 px-6 py-12 pb-28 md:grid-cols-[1.1fr_0.9fr]">
+    <main className="mx-auto grid min-h-screen w-full max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
       <section className="space-y-6">
-        <Badge className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs uppercase tracking-wide">
-          <LockKeyhole className="size-3.5" />
-          Secure Access
+        <Badge className="inline-flex items-center gap-2 font-mono text-xs text-neutral-400">
+          <LockKeyhole className="size-3.5 text-neutral-400" />
+          /Secure
         </Badge>
         <div className="space-y-4">
-          <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Welcome back to Archievr AI</h1>
-          <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
-            Continue your Artificial Intelligence and Machine Learning roadmap with personalized progress, resources, and analytics.
+          <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">Welcome back to Archievr AI</h1>
+          <p className="max-w-xl text-base leading-relaxed text-neutral-400 sm:text-lg">
+            Continue your AI and ML roadmap with personalized progress, resources, and analytics.
           </p>
         </div>
-        <div className="grid gap-2 text-sm text-muted-foreground">
+        <div className="grid gap-2 text-sm text-neutral-400">
           <p className="inline-flex items-center gap-2">
-            <CheckCircle2 className="size-4 text-primary" />
+            <CheckCircle2 className="size-4 text-neutral-300" />
             Personalized roadmap phases and topics
           </p>
           <p className="inline-flex items-center gap-2">
-            <CheckCircle2 className="size-4 text-primary" />
+            <CheckCircle2 className="size-4 text-neutral-300" />
             Saved resources and learning notes
           </p>
           <p className="inline-flex items-center gap-2">
-            <CheckCircle2 className="size-4 text-primary" />
+            <CheckCircle2 className="size-4 text-neutral-300" />
             Progress tracking and completion insights
           </p>
         </div>
       </section>
 
-      <Card className="relative w-full max-w-md space-y-6 overflow-hidden rounded-2xl p-8 md:ml-auto">
+      <Card className="relative w-full max-w-md space-y-6 overflow-hidden p-8 md:ml-auto">
         <div className="pointer-events-none absolute inset-0 top-0 left-0 right-0 h-1/2 overflow-hidden">
           <FlickeringGrid
             className="h-full w-full"
@@ -98,15 +98,15 @@ export default function LoginPage() {
         </div>
 
         <div className="relative space-y-2 text-center">
-          <div className="mx-auto w-fit rounded-full border bg-background p-3">
+          <div className="mx-auto w-fit rounded-full border border-neutral-800 bg-neutral-900 p-3 text-neutral-400">
             <BrainCircuit className="h-5 w-5" />
           </div>
           <CardTitle>Sign In</CardTitle>
-          <p className="text-sm text-muted-foreground">Track progress and customize your Artificial Intelligence and Machine Learning roadmap.</p>
+          <p className="text-sm text-neutral-400">Track progress and customize your machine learning roadmap.</p>
         </div>
 
         {errorText && (
-          <p className="rounded-lg border border-red-300/70 bg-red-50/80 p-3 text-sm text-red-700 dark:border-red-900 dark:bg-red-950/40 dark:text-red-200">
+          <p className="rounded-lg border border-red-900 bg-red-950/40 p-3 text-sm text-red-200">
             {errorText}
           </p>
         )}
@@ -117,8 +117,8 @@ export default function LoginPage() {
               Loading providers...
             </Button>
           ) : providers.length === 0 ? (
-            <p className="rounded-md border border-amber-300 bg-amber-50 p-3 text-sm text-amber-800">
-              No OAuth providers are configured. Set GitHub/Google client ID and secret in environment variables.
+            <p className="rounded-lg border border-neutral-800 bg-neutral-900 p-3 text-sm text-neutral-400">
+              No OAuth providers are configured. Set GitHub/Google credentials in environment variables.
             </p>
           ) : (
             providers.map((provider) => (
@@ -129,13 +129,13 @@ export default function LoginPage() {
                 onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
               >
                 Continue with {provider.name}
-                <ArrowRight className="ml-2 h-4 w-4" />
+                <ArrowRight className="ml-2 h-4 w-4 text-neutral-400" />
               </Button>
             ))
           )}
         </div>
         <div className="relative text-center">
-          <Link href="/" className="text-xs text-muted-foreground hover:text-foreground">
+          <Link href="/" className="text-xs text-neutral-400 transition-colors hover:text-white">
             Return to home
           </Link>
         </div>

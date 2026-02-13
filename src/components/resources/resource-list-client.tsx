@@ -2,9 +2,15 @@
 
 import { useState } from "react";
 import type { ResourceItem } from "@/types/roadmap";
-import { ResourceList } from "@/components/resources/resource-list";
+import { ResourceList, type ProjectResourceItem } from "@/components/resources/resource-list";
 
-export function ResourceListClient({ initialResources }: { initialResources: ResourceItem[] }) {
+export function ResourceListClient({
+  initialResources,
+  projectItems,
+}: {
+  initialResources: ResourceItem[];
+  projectItems: ProjectResourceItem[];
+}) {
   const [resources, setResources] = useState(initialResources);
 
   const refresh = async () => {
@@ -14,5 +20,5 @@ export function ResourceListClient({ initialResources }: { initialResources: Res
     setResources(rows);
   };
 
-  return <ResourceList resources={resources} onRefresh={refresh} />;
+  return <ResourceList resources={resources} projectItems={projectItems} onRefresh={refresh} />;
 }

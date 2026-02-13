@@ -77,8 +77,8 @@ export default async function AnalyticsPage() {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h2 className="text-2xl font-semibold">Analytics</h2>
-        <p className="text-sm text-muted-foreground">Progress breakdown, phase completion, and activity trends.</p>
+        <h2 className="text-3xl font-bold tracking-tight text-white">Analytics</h2>
+        <p className="text-sm text-neutral-400">Progress breakdown, phase completion, and activity trends.</p>
       </div>
       <StatsCards stats={stats} />
       <div className="grid gap-4 xl:grid-cols-2">
@@ -87,15 +87,15 @@ export default async function AnalyticsPage() {
       </div>
       <section className="grid gap-3">
         {phaseBreakdown.map((phase) => (
-          <Card key={phase.phaseId}>
+          <Card key={phase.phaseId} className="p-5">
             <div className="mb-2 flex items-center justify-between">
               <CardTitle>{phase.title}</CardTitle>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-neutral-400">
                 {phase.completed}/{phase.total}
               </p>
             </div>
             <Progress value={phase.percent} />
-            <p className="mt-2 text-sm">{phase.percent}% complete</p>
+            <p className="mt-2 text-sm text-neutral-400">{phase.percent}% complete</p>
           </Card>
         ))}
       </section>

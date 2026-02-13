@@ -28,7 +28,7 @@ export function AddResourceModal({ onCreated }: { onCreated: () => Promise<void>
         fileUrl,
         tags: tags
           .split(",")
-          .map((t) => t.trim())
+          .map((tag) => tag.trim())
           .filter(Boolean),
       }),
     });
@@ -51,21 +51,26 @@ export function AddResourceModal({ onCreated }: { onCreated: () => Promise<void>
           <DialogTitle>Add Resource</DialogTitle>
         </DialogHeader>
         <div className="space-y-3">
-          <Input placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
-          <select className="h-10 w-full rounded-md border bg-transparent px-3 text-sm" value={type} onChange={(e) => setType(e.target.value)}>
-            {["link", "note", "file", "video", "book", "course"].map((option) => (
+          <Input placeholder="Title" value={title} onChange={(event) => setTitle(event.target.value)} />
+          <select className="ui-select" value={type} onChange={(event) => setType(event.target.value)}>
+            {["link", "note", "file", "video", "book", "course", "article"].map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>
             ))}
           </select>
-          <Input placeholder="URL" value={url} onChange={(e) => setUrl(e.target.value)} />
-          <Textarea placeholder="Notes/content" value={content} onChange={(e) => setContent(e.target.value)} />
-          <Input placeholder="Tags (comma separated)" value={tags} onChange={(e) => setTags(e.target.value)} />
+          <Input placeholder="URL" value={url} onChange={(event) => setUrl(event.target.value)} />
+          <Textarea placeholder="Notes/content" value={content} onChange={(event) => setContent(event.target.value)} />
+          <Input placeholder="Tags (comma separated)" value={tags} onChange={(event) => setTags(event.target.value)} />
           <FileUploader onUploaded={setFileUrl} />
-          <Button className="w-full" onClick={create}>
-            Save
-          </Button>
+          <div className="flex items-center gap-2">
+            <Button className="flex-1" onClick={create}>
+              Save
+            </Button>
+            <Button variant="outline" className="flex-1" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+          </div>
         </div>
       </DialogContent>
     </Dialog>

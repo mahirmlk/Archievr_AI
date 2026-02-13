@@ -1,60 +1,36 @@
 "use client";
 
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useRoadmapStore } from "@/stores/roadmapStore";
 import type { PhaseItem } from "@/types/roadmap";
 import { TopicNode } from "@/components/roadmap/topic-node";
-import { Button } from "@/components/ui/button";
 
 export function PhaseNode({ phase }: { phase: PhaseItem }) {
-  const router = useRouter();
-  const expandedNodes = useRoadmapStore((s) => s.expandedNodes);
-  const toggleNode = useRoadmapStore((s) => s.toggleNode);
+  const expandedNodes = useRoadmapStore((state) => state.expandedNodes);
+  const toggleNode = useRoadmapStore((state) => state.toggleNode);
   const isExpanded = expandedNodes.has(phase.id);
+
   return (
-    <section className="rounded-xl border bg-[var(--card)]">
+    <section className="rounded-2xl border border-neutral-800 bg-neutral-900/50 transition-all duration-300 hover:border-neutral-700">
       <button
-        className="flex w-full items-center justify-between gap-3 p-4 text-left"
+        className="flex w-full items-center justify-between gap-3 p-5 text-left"
         onClick={() => toggleNode(phase.id)}
       >
-        <div>
-          <p className="font-semibold">{phase.title}</p>
-          <p className="text-sm text-muted-foreground">{phase.duration}</p>
+        <div className="min-w-0">
+          <p className="text-xs font-mono text-neutral-500">{String(phase.order).padStart(2, "0")}</p>
+          <p className="text-xl font-semibold tracking-tight text-white">{phase.title}</p>
+          <p className="text-sm text-neutral-400">{phase.duration}</p>
+          {phase.description ? <p className="mt-1 text-sm text-neutral-500">{phase.description}</p> : null}
         </div>
-        {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        {isExpanded ? <ChevronDown className="h-4 w-4 text-neutral-400" /> : <ChevronRight className="h-4 w-4 text-neutral-400" />}
       </button>
-      {isExpanded && (
-        <div className="space-y-3 border-t p-4">
-          <div className="flex justify-end">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={async () => {
-                await fetch("/api/topics", {
-                  method: "POST",
-                  headers: { "Content-Type": "application/json" },
-                  body: JSON.stringify({
-                    phaseId: phase.id,
-                    order: phase.topics.length + 1,
-                    title: "New Topic",
-                    description: "",
-                    skills: [],
-                  }),
-                });
-                router.refresh();
-              }}
-            >
-              Add Topic
-            </Button>
-          </div>
-          <div className="grid gap-3 md:grid-cols-2">
-            {phase.topics.map((topic) => (
-              <TopicNode key={topic.id} topic={topic} />
-            ))}
-          </div>
+      {isExpanded ? (
+        <div className="grid gap-3 border-t border-neutral-800 p-4 md:grid-cols-2">
+          {phase.topics.map((topic) => (
+            <TopicNode key={topic.id} topic={topic} />
+          ))}
         </div>
-      )}
+      ) : null}
     </section>
   );
 }

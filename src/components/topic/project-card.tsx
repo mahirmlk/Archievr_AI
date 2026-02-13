@@ -4,13 +4,13 @@ import type { ProjectItem } from "@/types/roadmap";
 
 export function ProjectCard({ project }: { project: ProjectItem }) {
   return (
-    <Card>
+    <Card className="p-4">
       <div className="mb-2 flex items-start justify-between gap-3">
-        <h3 className="font-medium">{project.title}</h3>
-        <Badge>{project.difficulty}</Badge>
+        <h3 className="font-medium text-zinc-100">{project.title}</h3>
+        <Badge className="capitalize">{project.difficulty}</Badge>
       </div>
-      <p className="text-sm text-[var(--muted)]">{project.description}</p>
-      {project.isPortfolio && <Badge className="mt-3">Portfolio</Badge>}
+      <p className="text-sm text-neutral-400">{project.description}</p>
+      {project.isPortfolio ? <Badge className="mt-3">Portfolio</Badge> : null}
     </Card>
   );
 }

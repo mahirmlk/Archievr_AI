@@ -48,6 +48,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   roadmaps      Roadmap[]
+  userRoadmaps  UserRoadmap[]
   progress      Progress[]
   resources     Resource[]
   createdAt     DateTime  @default(now())
@@ -71,11 +72,29 @@ model Roadmap {
   isEditable  Boolean      @default(true)
   phases      Phase[]      @relation("RoadmapPhases")
   topProjects TopProject[] @relation("RoadmapTopProjects")
+  userRoadmaps UserRoadmap[]
   createdAt   DateTime     @default(now())
   updatedAt   DateTime     @updatedAt
   user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model UserRoadmap {
+  id           String     @id @default(cuid())
+  userId       String
+  roadmapId    String
+  isDefault    Boolean    @default(false)
+  isEditable   Boolean    @default(true)
+  isActive     Boolean    @default(true)
+  progressRows Progress[] @relation("UserRoadmapProgress")
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  user         User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  roadmap      Roadmap    @relation(fields: [roadmapId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, roadmapId])
+  @@index([userId, isDefault])
 }
 
 model Phase {
@@ -164,6 +183,7 @@ model Progress {
   id             String   @id @default(cuid())
   userId         String
   topicId        String
+  userRoadmapId  String?
   status         String
   completionRate Float    @default(0)
   notes          String?  @db.Text
@@ -174,7 +194,9 @@ model Progress {
   updatedAt      DateTime @updatedAt
   user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   topic          Topic    @relation(fields: [topicId], references: [id], onDelete: Cascade)
+  userRoadmap    UserRoadmap? @relation("UserRoadmapProgress", fields: [userRoadmapId], references: [id], onDelete: SetNull)
 
   @@unique([userId, topicId])
   @@index([userId])
+  @@index([userRoadmapId])
 }

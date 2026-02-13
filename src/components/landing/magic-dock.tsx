@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Home, LayoutDashboard, LogIn, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { Home, LayoutDashboard, LogIn } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const navItems = [
@@ -14,11 +13,10 @@ const navItems = [
 
 export function MagicDock() {
   const pathname = usePathname();
-  const { resolvedTheme, setTheme } = useTheme();
 
   return (
     <div className="pointer-events-none fixed inset-x-0 bottom-4 z-30">
-      <nav className="pointer-events-auto mx-auto flex h-14 w-fit items-center gap-2 rounded-full border bg-card/90 p-2 shadow-[0_0_10px_3px] shadow-primary/5 backdrop-blur-3xl">
+      <nav className="pointer-events-auto mx-auto flex h-14 w-fit items-center gap-2 rounded-full border border-neutral-800 bg-neutral-950/90 p-2 backdrop-blur-md">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive = pathname === item.href;
@@ -28,9 +26,9 @@ export function MagicDock() {
               key={item.href}
               href={item.href}
               className={cn(
-                "flex size-10 items-center justify-center rounded-full border bg-background text-muted-foreground transition-colors",
-                "hover:bg-muted hover:text-foreground",
-                isActive && "bg-muted text-foreground"
+                "flex size-10 items-center justify-center rounded-full border text-neutral-400 transition-all duration-300",
+                "hover:border-neutral-700 hover:bg-neutral-800 hover:text-white",
+                isActive ? "border-neutral-700 bg-neutral-800 text-white" : "border-neutral-800 bg-neutral-900",
               )}
               aria-label={item.label}
             >
@@ -38,17 +36,6 @@ export function MagicDock() {
             </Link>
           );
         })}
-
-        <div className="mx-1 h-6 w-px bg-border" />
-
-        <button
-          type="button"
-          className="flex size-10 items-center justify-center rounded-full border bg-background text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          onClick={() => setTheme(resolvedTheme === "dark" ? "light" : "dark")}
-          aria-label="Toggle theme"
-        >
-          {resolvedTheme === "dark" ? <Sun className="size-4" /> : <Moon className="size-4" />}
-        </button>
       </nav>
     </div>
   );

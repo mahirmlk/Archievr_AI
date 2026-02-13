@@ -10,11 +10,11 @@ function dateKey(date: Date) {
 }
 
 function levelClass(level: number) {
-  if (level === 0) return "bg-muted/60";
-  if (level === 1) return "bg-emerald-200/80 dark:bg-emerald-900/70";
-  if (level === 2) return "bg-emerald-300/80 dark:bg-emerald-800/80";
-  if (level === 3) return "bg-emerald-400/80 dark:bg-emerald-700/80";
-  return "bg-emerald-500/90 dark:bg-emerald-600/90";
+  if (level === 0) return "bg-neutral-900";
+  if (level === 1) return "bg-neutral-700";
+  if (level === 2) return "bg-neutral-500";
+  if (level === 3) return "bg-neutral-300";
+  return "bg-white";
 }
 
 export function ActivityHeatmap({ activities }: { activities: ActivityItem[] }) {
@@ -35,7 +35,7 @@ export function ActivityHeatmap({ activities }: { activities: ActivityItem[] }) 
   const maxCount = Math.max(...days.map((day) => day.count), 0);
 
   return (
-    <Card>
+    <Card className="p-5">
       <CardTitle className="mb-3">Learning Activity (Last 12 Weeks)</CardTitle>
       <div className="grid grid-cols-12 gap-1">
         {days.map((day) => {

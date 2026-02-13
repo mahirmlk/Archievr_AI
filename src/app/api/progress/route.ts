@@ -21,6 +21,28 @@ export async function POST(req: Request) {
   const body = await req.json();
   const now = new Date();
   const completionRate = body.completionRate ?? progressToRate(body.status);
+  const topic = await prisma.topic.findFirst({
+    where: {
+      id: body.topicId,
+      phase: { roadmap: { userId } },
+    },
+    select: { phase: { select: { roadmapId: true } } },
+  });
+
+  if (!topic) return NextResponse.json({ error: "Topic not found" }, { status: 404 });
+
+  const roadmapId = topic.phase.roadmapId;
+  let userRoadmap = await prisma.userRoadmap.findFirst({
+    where: { userId, roadmapId },
+    select: { id: true },
+  });
+
+  if (!userRoadmap) {
+    userRoadmap = await prisma.userRoadmap.create({
+      data: { userId, roadmapId, isDefault: false, isEditable: true },
+      select: { id: true },
+    });
+  }
 
   const result = await prisma.progress.upsert({
     where: {
@@ -32,6 +54,7 @@ export async function POST(req: Request) {
     create: {
       userId,
       topicId: body.topicId,
+      userRoadmapId: userRoadmap.id,
       status: body.status,
       completionRate,
       notes: body.notes ?? null,
@@ -41,6 +64,7 @@ export async function POST(req: Request) {
     },
     update: {
       status: body.status,
+      userRoadmapId: userRoadmap.id,
       completionRate,
       notes: body.notes,
       completedAt: body.status === "completed" || body.status === "mastered" ? now : null,

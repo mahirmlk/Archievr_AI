@@ -1,5 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-import { defaultRoadmap } from "../src/lib/default-roadmap";
+import { defaultRoadmap } from "../src/lib/data/default-roadmap";
+
+type DefaultTopicResource = {
+  title: string;
+  type?: string;
+  url?: string;
+  content?: string;
+  tags?: string[];
+};
+
+function topicResources(topic: unknown): DefaultTopicResource[] {
+  const resources = (topic as { resources?: DefaultTopicResource[] }).resources;
+  return Array.isArray(resources) ? resources : [];
+}
 
 const prisma = new PrismaClient();
 
@@ -19,9 +32,27 @@ async function main() {
     },
   });
 
-  if (existing) return;
+  if (existing) {
+    await prisma.userRoadmap.upsert({
+      where: {
+        userId_roadmapId: {
+          userId: user.id,
+          roadmapId: existing.id,
+        },
+      },
+      update: { isDefault: true, isEditable: true, isActive: true },
+      create: {
+        userId: user.id,
+        roadmapId: existing.id,
+        isDefault: true,
+        isEditable: true,
+        isActive: true,
+      },
+    });
+    return;
+  }
 
-  await prisma.roadmap.create({
+  const roadmap = await prisma.roadmap.create({
     data: {
       userId: user.id,
       name: defaultRoadmap.name,
@@ -40,6 +71,16 @@ async function main() {
               title: topic.title,
               description: topic.description,
               skills: [...topic.skills],
+              resources: {
+                create: topicResources(topic).map((resource) => ({
+                  userId: user.id,
+                  title: resource.title,
+                  type: resource.type ?? "reference",
+                  url: resource.url ?? null,
+                  content: resource.content ?? null,
+                  tags: resource.tags ?? [],
+                })),
+              },
               projects: {
                 create: topic.projects.map((project) => ({
                   title: project.title,
@@ -62,6 +103,16 @@ async function main() {
           isPortfolio: project.isPortfolio,
         })),
       },
+    },
+  });
+
+  await prisma.userRoadmap.create({
+    data: {
+      userId: user.id,
+      roadmapId: roadmap.id,
+      isDefault: true,
+      isEditable: true,
+      isActive: true,
     },
   });
 }

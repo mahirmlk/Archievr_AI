@@ -18,7 +18,7 @@ export function ProgressChart({ stats }: { stats: ProgressStats | null }) {
   const y = scaleLinear().domain([0, 100]).range([height - margin.bottom, margin.top]);
 
   return (
-    <Card>
+    <Card className="p-5">
       <CardTitle className="mb-4">Phase-by-Phase Completion</CardTitle>
       <div className="overflow-x-auto">
         <svg viewBox={`0 0 ${width} ${height}`} className="h-72 w-full min-w-[680px]">
@@ -28,11 +28,11 @@ export function ProgressChart({ stats }: { stats: ProgressStats | null }) {
             const h = height - margin.bottom - yPos;
             return (
               <g key={d.phaseId}>
-                <rect x={xPos} y={yPos} width={x.bandwidth()} height={h} rx={6} fill="var(--primary)" />
-                <text x={xPos + x.bandwidth() / 2} y={yPos - 6} textAnchor="middle" fontSize="10">
+                <rect x={xPos} y={yPos} width={x.bandwidth()} height={h} rx={8} fill="#f4f4f5" opacity={0.9} />
+                <text x={xPos + x.bandwidth() / 2} y={yPos - 6} textAnchor="middle" fontSize="10" fill="#a1a1aa">
                   {d.percent}%
                 </text>
-                <text x={xPos + x.bandwidth() / 2} y={height - 16} textAnchor="middle" fontSize="10">
+                <text x={xPos + x.bandwidth() / 2} y={height - 16} textAnchor="middle" fontSize="10" fill="#71717a">
                   {d.title.replace("Phase ", "P")}
                 </text>
               </g>

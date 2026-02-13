@@ -24,14 +24,27 @@ export async function POST(req: Request) {
   if (!userId) return response;
 
   const body = await req.json();
-  const roadmap = await prisma.roadmap.create({
-    data: {
-      userId,
-      name: body.name ?? "Custom Roadmap",
-      description: body.description ?? "",
-      isDefault: false,
-      isEditable: true,
-    },
+  const roadmap = await prisma.$transaction(async (tx) => {
+    const created = await tx.roadmap.create({
+      data: {
+        userId,
+        name: body.name ?? "Custom Roadmap",
+        description: body.description ?? "",
+        isDefault: false,
+        isEditable: true,
+      },
+    });
+
+    await tx.userRoadmap.create({
+      data: {
+        userId,
+        roadmapId: created.id,
+        isDefault: false,
+        isEditable: true,
+      },
+    });
+
+    return created;
   });
 
   return NextResponse.json(roadmap, { status: 201 });

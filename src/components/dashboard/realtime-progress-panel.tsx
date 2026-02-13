@@ -48,16 +48,16 @@ export function RealtimeProgressPanel({ initialStats }: { initialStats: Progress
   );
 
   return (
-    <Card className="space-y-4">
+    <Card className="space-y-4 p-5">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="space-y-1">
           <CardTitle className="inline-flex items-center gap-2">
-            <Activity className="h-4 w-4" />
+            <Activity className="h-4 w-4 text-neutral-400" />
             Real-Time Progress
           </CardTitle>
-          <p className="text-sm text-muted-foreground">Auto-refreshes every 15 seconds from your latest activity.</p>
+          <p className="text-sm text-neutral-400">Auto-refreshes every 15 seconds from your latest activity.</p>
         </div>
-        <p className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+        <p className="inline-flex items-center gap-1.5 text-xs text-neutral-500">
           <Clock3 className="h-3.5 w-3.5" />
           Synced {relativeTime}
         </p>
@@ -65,8 +65,8 @@ export function RealtimeProgressPanel({ initialStats }: { initialStats: Progress
 
       <div className="space-y-2">
         <div className="flex items-center justify-between text-sm">
-          <p className="font-medium">Overall completion</p>
-          <p className="text-muted-foreground">{stats.overallCompletion}%</p>
+          <p className="font-medium text-zinc-100">Overall completion</p>
+          <p className="text-neutral-400">{stats.overallCompletion}%</p>
         </div>
         <Progress value={stats.overallCompletion} />
       </div>
@@ -75,10 +75,10 @@ export function RealtimeProgressPanel({ initialStats }: { initialStats: Progress
         {statusBars.map((item) => {
           const percent = item.total ? Math.round((item.value / item.total) * 100) : 0;
           return (
-            <div key={item.label} className="space-y-2 rounded-lg border p-3">
+            <div key={item.label} className="space-y-2 rounded-lg border border-neutral-800 bg-neutral-950/60 p-3">
               <div className="flex items-center justify-between text-sm">
-                <p className="font-medium">{item.label}</p>
-                <p className="text-muted-foreground">
+                <p className="font-medium text-zinc-100">{item.label}</p>
+                <p className="text-neutral-400">
                   {item.value}/{item.total}
                 </p>
               </div>

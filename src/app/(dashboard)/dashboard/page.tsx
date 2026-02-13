@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FolderOpen, Map as MapIcon, Rocket } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { ensureDefaultRoadmap } from "@/lib/default-roadmap-seed";
@@ -14,10 +15,22 @@ export default async function DashboardPage() {
   const userId = session?.user?.id ?? "";
   await ensureDefaultRoadmap(userId);
 
-  const [roadmaps, progressRows, topicCount, topics] = await Promise.all([
+  const [roadmaps, progressRows, topicCount, topics, resources] = await Promise.all([
     prisma.roadmap.findMany({
       where: { userId },
       orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+      include: {
+        phases: {
+          orderBy: { order: "asc" },
+          include: {
+            topics: {
+              orderBy: { order: "asc" },
+              include: { resources: true, projects: true },
+            },
+          },
+        },
+        topProjects: true,
+      },
     }),
     prisma.progress.findMany({ where: { userId }, include: { topic: { include: { phase: true } } } }),
     prisma.topic.count({ where: { phase: { roadmap: { userId } } } }),
@@ -26,10 +39,16 @@ export default async function DashboardPage() {
       include: { phase: true },
       orderBy: [{ phase: { order: "asc" } }, { order: "asc" }],
     }),
+    prisma.resource.findMany({
+      where: { userId },
+      include: { topic: true },
+      orderBy: { updatedAt: "desc" },
+      take: 12,
+    }),
   ]);
 
-  const completed = progressRows.filter((p) => p.status === "completed" || p.status === "mastered").length;
-  const inProgress = progressRows.filter((p) => p.status === "in_progress").length;
+  const completed = progressRows.filter((progress) => progress.status === "completed" || progress.status === "mastered").length;
+  const inProgress = progressRows.filter((progress) => progress.status === "in_progress").length;
   const notStarted = Math.max(topicCount - completed - inProgress, 0);
   const overallCompletion = topicCount ? Math.round((completed / topicCount) * 100) : 0;
 
@@ -79,50 +98,99 @@ export default async function DashboardPage() {
     phaseBreakdown,
   };
 
-  const nextTopics = await prisma.topic.findMany({
-    where: {
-      phase: { roadmap: { userId } },
-      progress: { none: { userId } },
-    },
-    take: 5,
-    include: { phase: true },
-    orderBy: [{ phase: { order: "asc" } }, { order: "asc" }],
-  });
+  const activeRoadmap = roadmaps[0] ?? null;
+  const topicSections =
+    activeRoadmap?.phases.flatMap((phase) =>
+      phase.topics.map((topic) => ({
+        phaseTitle: phase.title,
+        topic,
+      })),
+    ) ?? [];
+
+  const roadmapProjectCount =
+    (activeRoadmap?.topProjects.length ?? 0) +
+    (activeRoadmap?.phases.reduce((total, phase) => total + phase.topics.reduce((sum, topic) => sum + topic.projects.length, 0), 0) ?? 0);
 
   return (
     <div className="space-y-5">
       <StatsCards stats={stats} />
       <RealtimeProgressPanel initialStats={stats} />
+
       <Card className="space-y-3">
-        <CardTitle>Roadmaps</CardTitle>
-        <div className="grid gap-2">
-          {roadmaps.map((roadmap) => (
-            <Link key={roadmap.id} href={`/roadmap/${roadmap.id}`} className="rounded-md border p-3 hover:bg-black/5 dark:hover:bg-white/5">
-              <div className="flex items-center justify-between gap-2">
-                <p className="font-medium">{roadmap.name}</p>
-                {roadmap.isDefault ? <Badge>Default</Badge> : null}
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="inline-flex items-center gap-2">
+            <MapIcon className="h-4 w-4 text-neutral-400" />
+            Roadmap Overview
+          </CardTitle>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/roadmap">Open Full Roadmap</Link>
+          </Button>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          {phaseBreakdown.map((phase) => (
+            <div key={phase.phaseId} className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4 transition-all duration-300 hover:border-neutral-700">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="font-medium text-zinc-100">{phase.title}</p>
+                <p className="text-xs text-neutral-400">{phase.completed}/{phase.total}</p>
               </div>
-              <p className="text-sm text-[var(--muted)]">{roadmap.description}</p>
-            </Link>
+              <Progress value={phase.percent} />
+              <p className="mt-2 text-xs text-neutral-400">{phase.percent}% complete</p>
+            </div>
           ))}
         </div>
       </Card>
+
       <Card className="space-y-3">
-        <CardTitle>Up Next Recommendations</CardTitle>
-        <div className="space-y-2">
-          {nextTopics.map((topic) => (
-            <div key={topic.id} className="rounded-md border p-3">
-              <p className="font-medium">{topic.title}</p>
-              <p className="text-sm text-[var(--muted)]">{topic.phase.title}</p>
-              <div className="mt-2">
-                <Progress value={0} />
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="inline-flex items-center gap-2">
+            <FolderOpen className="h-4 w-4 text-neutral-400" />
+            Topic Resources
+          </CardTitle>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/resources">Manage All Resources</Link>
+          </Button>
+        </div>
+        <div className="grid gap-3 md:grid-cols-2">
+          {topicSections.map(({ phaseTitle, topic }) => (
+            <div key={topic.id} className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4 transition-all duration-300 hover:border-neutral-700">
+              <div className="mb-2 flex items-start justify-between gap-2">
+                <div>
+                  <p className="font-medium text-zinc-100">{topic.title}</p>
+                  <p className="text-xs text-neutral-500">{phaseTitle}</p>
+                </div>
+                <Badge>{topic.resources.length} resources</Badge>
               </div>
-              <Button asChild className="mt-3" size="sm">
-                <Link href={`/topic/${topic.id}`}>Start Topic</Link>
+              <div className="space-y-2">
+                {topic.resources.length ? (
+                  topic.resources.slice(0, 3).map((resource) => (
+                    <div key={resource.id} className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2">
+                      <p className="text-sm text-zinc-100">{resource.title}</p>
+                      <p className="text-xs text-neutral-400">{resource.type}</p>
+                    </div>
+                  ))
+                ) : (
+                  <p className="text-xs text-neutral-500">No resources linked yet. Add resources in Roadmap edit mode or Resources page.</p>
+                )}
+              </div>
+              <Button asChild variant="ghost" size="sm" className="mt-3">
+                <Link href={`/topic/${topic.id}`}>Open Topic</Link>
               </Button>
             </div>
           ))}
         </div>
+      </Card>
+
+      <Card className="space-y-2">
+        <CardTitle className="inline-flex items-center gap-2">
+          <Rocket className="h-4 w-4 text-neutral-400" />
+          Resources and Projects Summary
+        </CardTitle>
+        <p className="text-sm text-neutral-400">
+          {resources.length} saved resources and {roadmapProjectCount} roadmap projects are available in your resources area.
+        </p>
+        <Button asChild variant="outline" size="sm">
+          <Link href="/resources">Open Resources and Projects</Link>
+        </Button>
       </Card>
     </div>
   );

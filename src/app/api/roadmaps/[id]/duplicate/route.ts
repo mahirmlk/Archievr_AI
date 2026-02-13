@@ -25,48 +25,61 @@ export async function POST(_: Request, { params }: { params: Promise<{ id: strin
 
   if (!source) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
-  const duplicated = await prisma.roadmap.create({
-    data: {
-      userId,
-      name: `${source.name} (Copy)`,
-      description: source.description,
-      isDefault: false,
-      isEditable: true,
-      phases: {
-        create: source.phases.map((phase) => ({
-          order: phase.order,
-          title: phase.title,
-          description: phase.description,
-          duration: phase.duration,
-          topics: {
-            create: phase.topics.map((topic) => ({
-              order: topic.order,
-              title: topic.title,
-              description: topic.description,
-              skills: topic.skills,
-              projects: {
-                create: topic.projects.map((project) => ({
-                  title: project.title,
-                  description: project.description,
-                  difficulty: project.difficulty,
-                  isPortfolio: project.isPortfolio,
-                })),
-              },
-            })),
-          },
-        })),
+  const duplicated = await prisma.$transaction(async (tx) => {
+    const roadmap = await tx.roadmap.create({
+      data: {
+        userId,
+        name: `${source.name} (Copy)`,
+        description: source.description,
+        isDefault: false,
+        isEditable: true,
+        phases: {
+          create: source.phases.map((phase) => ({
+            order: phase.order,
+            title: phase.title,
+            description: phase.description,
+            duration: phase.duration,
+            topics: {
+              create: phase.topics.map((topic) => ({
+                order: topic.order,
+                title: topic.title,
+                description: topic.description,
+                skills: topic.skills,
+                projects: {
+                  create: topic.projects.map((project) => ({
+                    title: project.title,
+                    description: project.description,
+                    difficulty: project.difficulty,
+                    isPortfolio: project.isPortfolio,
+                  })),
+                },
+              })),
+            },
+          })),
+        },
+        topProjects: {
+          create: source.topProjects.map((project) => ({
+            title: project.title,
+            description: project.description,
+            tech: project.tech,
+            impact: project.impact,
+            difficulty: project.difficulty,
+            isPortfolio: project.isPortfolio,
+          })),
+        },
       },
-      topProjects: {
-        create: source.topProjects.map((project) => ({
-          title: project.title,
-          description: project.description,
-          tech: project.tech,
-          impact: project.impact,
-          difficulty: project.difficulty,
-          isPortfolio: project.isPortfolio,
-        })),
+    });
+
+    await tx.userRoadmap.create({
+      data: {
+        userId,
+        roadmapId: roadmap.id,
+        isDefault: false,
+        isEditable: true,
       },
-    },
+    });
+
+    return roadmap;
   });
 
   return NextResponse.json(duplicated, { status: 201 });

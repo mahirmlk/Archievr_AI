@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const highlights = [
   {
     title: "Adaptive Roadmaps",
-    description: "Break your Artificial Intelligence and Machine Learning journey into focused phases and reorder topics as goals evolve.",
+    description: "Break your AI and ML journey into focused phases and reorder topics as goals evolve.",
     icon: Target,
   },
   {
@@ -30,26 +30,26 @@ export default async function HomePage() {
 
   return (
     <>
-      <main className="mx-auto flex w-full max-w-5xl flex-col gap-12 px-6 py-12 pb-28 sm:py-16 sm:pb-32">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-16 pb-28 sm:px-6 lg:px-8">
         <section className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
           <div className="space-y-6">
-            <Badge className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs uppercase tracking-wide">
-              <Sparkles className="size-3.5" />
-              Magic UI Integrated
+            <Badge className="inline-flex items-center gap-2 font-mono text-xs text-neutral-400">
+              <Sparkles className="size-3.5 text-neutral-400" />
+              /Experience
             </Badge>
             <div className="space-y-4">
-              <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Build your Artificial Intelligence and Machine Learning roadmap with clarity and speed.
+              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
+                Build your machine learning roadmap with clarity and production focus.
               </h1>
-              <p className="max-w-2xl text-balance text-muted-foreground sm:text-lg">
-                Plan deeply, track progress in real time, and keep resources connected to each topic in one focused workspace.
+              <p className="max-w-2xl text-base leading-relaxed text-neutral-400 sm:text-lg">
+                Plan deeply, track progress in real time, and keep resources connected to each topic in one workspace.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <Button asChild size="lg">
                 <Link href={session?.user?.id ? "/dashboard" : "/login"}>
                   {session?.user?.id ? "Open Dashboard" : "Sign In to Continue"}
-                  <ArrowRight className="ml-2 size-4" />
+                  <ArrowRight className="ml-2 size-4 text-neutral-900" />
                 </Link>
               </Button>
               {!session?.user?.id ? (
@@ -60,7 +60,7 @@ export default async function HomePage() {
             </div>
           </div>
 
-          <div className="relative overflow-hidden rounded-2xl border bg-card p-8">
+          <div className="relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/50 p-8 backdrop-blur-sm">
             <div className="pointer-events-none absolute inset-0 top-0 left-0 right-0 h-1/2 overflow-hidden">
               <FlickeringGrid
                 className="h-full w-full"
@@ -73,34 +73,32 @@ export default async function HomePage() {
               />
             </div>
             <div className="relative space-y-4">
-              <div className="inline-flex size-11 items-center justify-center rounded-full border bg-background">
+              <div className="inline-flex size-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400">
                 <BrainCircuit className="size-5" />
               </div>
-              <h2 className="text-xl font-semibold">Archievr AI Platform</h2>
-              <p className="text-sm text-muted-foreground">
+              <h2 className="text-2xl font-semibold tracking-tight text-white">Archievr AI Platform</h2>
+              <p className="text-sm leading-relaxed text-neutral-400">
                 Organize your roadmap, track progress, and keep every resource aligned to the exact topic you are learning.
               </p>
             </div>
           </div>
         </section>
 
-        <section className="space-y-8">
+        <section className="space-y-8 py-8">
           <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-linear-to-r from-transparent via-border to-transparent" />
-            <span className="rounded-xl border bg-primary px-3 py-1 text-xs font-medium text-background">
-              Core Highlights
-            </span>
-            <div className="h-px flex-1 bg-linear-to-l from-transparent via-border to-transparent" />
+            <div className="h-px flex-1 bg-neutral-800" />
+            <span className="rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs text-neutral-400">Core Highlights</span>
+            <div className="h-px flex-1 bg-neutral-800" />
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
             {highlights.map((item) => (
-              <Card key={item.title} className="h-full rounded-xl border p-5">
-                <div className="mb-4 inline-flex size-9 items-center justify-center rounded-full border bg-background">
+              <Card key={item.title} className="h-full">
+                <div className="mb-4 inline-flex size-9 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400">
                   <item.icon className="size-4" />
                 </div>
                 <CardTitle className="mb-2">{item.title}</CardTitle>
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <p className="text-sm leading-relaxed text-neutral-400">{item.description}</p>
               </Card>
             ))}
           </div>

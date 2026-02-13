@@ -41,72 +41,72 @@
 }
 
 :root {
-  --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --radius: 0.875rem;
+  --background: #0a0a0a;
+  --foreground: #f4f4f5;
+  --card: rgb(24 24 27 / 0.6);
+  --card-foreground: #f4f4f5;
+  --popover: rgb(24 24 27 / 0.9);
+  --popover-foreground: #f4f4f5;
+  --primary: #f4f4f5;
+  --primary-foreground: #0a0a0a;
+  --secondary: #18181b;
+  --secondary-foreground: #e4e4e7;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --accent: #18181b;
+  --accent-foreground: #e4e4e7;
+  --destructive: #dc2626;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #3f3f46;
+  --chart-1: #d4d4d8;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
+  --sidebar: rgb(24 24 27 / 0.75);
+  --sidebar-foreground: #e4e4e7;
+  --sidebar-primary: #f4f4f5;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #18181b;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #3f3f46;
 }
 
 .dark {
-  --background: oklch(0.18 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #0a0a0a;
+  --foreground: #f4f4f5;
+  --card: rgb(24 24 27 / 0.6);
+  --card-foreground: #f4f4f5;
+  --popover: rgb(24 24 27 / 0.9);
+  --popover-foreground: #f4f4f5;
+  --primary: #f4f4f5;
+  --primary-foreground: #0a0a0a;
+  --secondary: #18181b;
+  --secondary-foreground: #e4e4e7;
+  --muted: #18181b;
+  --muted-foreground: #a1a1aa;
+  --accent: #18181b;
+  --accent-foreground: #e4e4e7;
+  --destructive: #dc2626;
+  --border: #27272a;
+  --input: #27272a;
+  --ring: #3f3f46;
+  --chart-1: #d4d4d8;
+  --chart-2: #a1a1aa;
+  --chart-3: #71717a;
+  --chart-4: #52525b;
+  --chart-5: #3f3f46;
+  --sidebar: rgb(24 24 27 / 0.75);
+  --sidebar-foreground: #e4e4e7;
+  --sidebar-primary: #f4f4f5;
+  --sidebar-primary-foreground: #0a0a0a;
+  --sidebar-accent: #18181b;
+  --sidebar-accent-foreground: #f4f4f5;
+  --sidebar-border: #27272a;
+  --sidebar-ring: #3f3f46;
 }
 
 @layer base {
@@ -115,7 +115,12 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-neutral-950 text-zinc-100 antialiased;
+    background-image: radial-gradient(circle at 0 0, rgb(38 38 38 / 0.22) 0, transparent 45%);
+  }
+
+  ::selection {
+    @apply bg-neutral-700 text-white;
   }
 
   .shiki,
@@ -135,7 +140,7 @@
   }
 
   .prose code {
-    @apply m-0! mx-1! rounded-md! border px-1.5 py-0.5 bg-muted/60 text-[13px]! font-mono text-foreground/90! dark:bg-muted/40;
+    @apply m-0! mx-1! rounded-md! border border-neutral-800 px-1.5 py-0.5 bg-neutral-900/80 text-[13px]! font-mono text-zinc-100!;
   }
 
   .prose code::before,
@@ -168,11 +173,11 @@
   }
 
   .prose a {
-    @apply text-primary underline underline-offset-4;
+    @apply text-zinc-100 underline underline-offset-4;
   }
 
   .prose blockquote {
-    @apply border-l-4 border-amber-500! rounded-md rounded-l-none bg-muted/50 p-4 pl-4 italic;
+    @apply rounded-md rounded-l-none border-l-4 border-neutral-700! bg-neutral-900/60 p-4 pl-4 italic text-zinc-300;
   }
 
   .prose blockquote p {
@@ -210,20 +215,20 @@
   }
 
   .prose tr {
-    @apply h-10 cursor-pointer transition-colors hover:bg-accent/50!;
+    @apply h-10 cursor-pointer transition-colors hover:bg-neutral-900/80!;
   }
 
   .prose :where(th):not(:where([class~="not-prose"] *)) {
-    @apply m-0 border-b border-border bg-muted/50 p-3! py-2! text-left font-semibold text-foreground;
+    @apply m-0 border-b border-neutral-800 bg-neutral-900/60 p-3! py-2! text-left font-semibold text-zinc-100;
   }
 
   .prose :where(td):not(:where([class~="not-prose"] *)) {
-    @apply border-b border-border p-2! text-sm! text-muted-foreground;
+    @apply border-b border-neutral-800 p-2! text-sm! text-zinc-400;
   }
 
   .prose :where(th:not(:last-child)):not(:where([class~="not-prose"] *)),
   .prose :where(td:not(:last-child)):not(:where([class~="not-prose"] *)) {
-    @apply border-r border-border;
+    @apply border-r border-neutral-800;
   }
 
   .prose :where(tbody tr:last-child td):not(:where([class~="not-prose"] *)) {
@@ -245,5 +250,9 @@
 @layer utilities {
   .page-enter {
     animation: page-enter 220ms ease-out;
+  }
+
+  .ui-select {
+    @apply h-10 w-full rounded-lg border border-neutral-800 bg-neutral-900 text-sm text-zinc-100 outline-none transition-all duration-300 focus:border-neutral-600 focus:ring-2 focus:ring-neutral-700;
   }
 }
