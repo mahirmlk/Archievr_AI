@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getProviders, signIn } from "next-auth/react";
 import { ArrowRight, BrainCircuit, CheckCircle2, LockKeyhole } from "lucide-react";
@@ -27,7 +27,7 @@ function authErrorMessage(error?: string | null) {
   return map[error] ?? map.Default;
 }
 
-export default function LoginPage() {
+function LoginPageContent() {
   const searchParams = useSearchParams();
   const [providers, setProviders] = useState<ProviderItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -141,5 +141,13 @@ export default function LoginPage() {
         </div>
       </Card>
     </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<main className="min-h-screen bg-neutral-950" />}>
+      <LoginPageContent />
+    </Suspense>
   );
 }
