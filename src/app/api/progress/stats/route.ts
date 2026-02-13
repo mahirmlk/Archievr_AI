@@ -16,6 +16,8 @@ export async function GET() {
 
   const totalTopics = topics.length;
   const completed = progress.filter((p) => p.status === "completed" || p.status === "mastered").length;
+  const inProgress = progress.filter((p) => p.status === "in_progress").length;
+  const notStarted = Math.max(totalTopics - completed - inProgress, 0);
   const overallCompletion = totalTopics ? Math.round((completed / totalTopics) * 100) : 0;
 
   const byPhase = new Map<
@@ -50,6 +52,8 @@ export async function GET() {
   return NextResponse.json({
     totalTopics,
     completedTopics: completed,
+    inProgressTopics: inProgress,
+    notStartedTopics: notStarted,
     overallCompletion,
     phaseBreakdown,
   });

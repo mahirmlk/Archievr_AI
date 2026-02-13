@@ -14,7 +14,7 @@ export function Progress({
       value={value}
     >
       <ProgressPrimitive.Indicator
-        className="h-full w-full bg-[var(--primary)] transition-transform"
+        className="h-full w-full bg-[var(--primary)] transition-transform duration-500 ease-out"
         style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
       />
     </ProgressPrimitive.Root>

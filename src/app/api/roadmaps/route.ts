@@ -2,69 +2,19 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/api-auth";
 import { roadmapInclude } from "@/lib/roadmap-query";
-import { defaultRoadmap } from "@/lib/default-roadmap";
+import { ensureDefaultRoadmap } from "@/lib/default-roadmap-seed";
 
 export async function GET() {
   const { userId, response } = await requireUser();
   if (!userId) return response;
 
-  let roadmaps = await prisma.roadmap.findMany({
+  await ensureDefaultRoadmap(userId);
+
+  const roadmaps = await prisma.roadmap.findMany({
     where: { userId },
     include: roadmapInclude,
-    orderBy: { createdAt: "asc" },
+    orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
   });
-
-  if (roadmaps.length === 0) {
-    await prisma.roadmap.create({
-      data: {
-        userId,
-        name: defaultRoadmap.name,
-        description: defaultRoadmap.description,
-        isDefault: true,
-        isEditable: false,
-        phases: {
-          create: defaultRoadmap.phases.map((phase) => ({
-            order: phase.order,
-            title: phase.title,
-            description: phase.description,
-            duration: phase.duration,
-            topics: {
-              create: phase.topics.map((topic) => ({
-                order: topic.order,
-                title: topic.title,
-                description: topic.description,
-                skills: [...topic.skills],
-                projects: {
-                  create: topic.projects.map((project) => ({
-                    title: project.title,
-                    description: project.description,
-                    difficulty: project.difficulty,
-                    isPortfolio: "isPortfolio" in project ? Boolean(project.isPortfolio) : false,
-                  })),
-                },
-              })),
-            },
-          })),
-        },
-        topProjects: {
-          create: defaultRoadmap.topProjects.map((project) => ({
-            title: project.title,
-            description: project.description,
-            tech: [...project.tech],
-            impact: project.impact,
-            difficulty: project.difficulty,
-            isPortfolio: project.isPortfolio,
-          })),
-        },
-      },
-    });
-
-    roadmaps = await prisma.roadmap.findMany({
-      where: { userId },
-      include: roadmapInclude,
-      orderBy: { createdAt: "asc" },
-    });
-  }
 
   return NextResponse.json(roadmaps);
 }

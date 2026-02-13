@@ -27,7 +27,7 @@ async function main() {
       name: defaultRoadmap.name,
       description: defaultRoadmap.description,
       isDefault: true,
-      isEditable: false,
+      isEditable: true,
       phases: {
         create: defaultRoadmap.phases.map((phase) => ({
           order: phase.order,

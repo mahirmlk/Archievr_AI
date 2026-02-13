@@ -72,6 +72,8 @@ export interface Roadmap {
 export interface ProgressStats {
   totalTopics: number;
   completedTopics: number;
+  inProgressTopics: number;
+  notStartedTopics: number;
   overallCompletion: number;
   phaseBreakdown: Array<{
     phaseId: string;

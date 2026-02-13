@@ -14,14 +14,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   const resource = await prisma.resource.update({
     where: { id },
     data: {
-      title: body.title,
-      type: body.type,
-      url: body.url,
-      content: body.content,
-      fileUrl: body.fileUrl,
-      tags: body.tags,
-      topicId: body.topicId,
-      isPublic: body.isPublic,
+      title: body.title ?? existing.title,
+      type: body.type ?? existing.type,
+      url: body.url !== undefined ? body.url : existing.url,
+      content: body.content !== undefined ? body.content : existing.content,
+      fileUrl: body.fileUrl !== undefined ? body.fileUrl : existing.fileUrl,
+      tags: body.tags ?? existing.tags,
+      topicId: body.topicId !== undefined ? body.topicId : existing.topicId,
+      isPublic: body.isPublic ?? existing.isPublic,
     },
   });
 

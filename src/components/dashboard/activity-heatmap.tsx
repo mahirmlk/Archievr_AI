@@ -1,21 +1,53 @@
 import { Card, CardTitle } from "@/components/ui/card";
 
-export function ActivityHeatmap() {
-  const cells = Array.from({ length: 7 * 12 }, (_, i) => i % 5);
+type ActivityItem = {
+  date: string;
+  count: number;
+};
+
+function dateKey(date: Date) {
+  return date.toISOString().slice(0, 10);
+}
+
+function levelClass(level: number) {
+  if (level === 0) return "bg-muted/60";
+  if (level === 1) return "bg-emerald-200/80 dark:bg-emerald-900/70";
+  if (level === 2) return "bg-emerald-300/80 dark:bg-emerald-800/80";
+  if (level === 3) return "bg-emerald-400/80 dark:bg-emerald-700/80";
+  return "bg-emerald-500/90 dark:bg-emerald-600/90";
+}
+
+export function ActivityHeatmap({ activities }: { activities: ActivityItem[] }) {
+  const byDay = new Map<string, number>();
+  for (const item of activities) {
+    byDay.set(item.date, (byDay.get(item.date) ?? 0) + item.count);
+  }
+
+  const today = new Date();
+  const days = Array.from({ length: 84 }, (_, index) => {
+    const date = new Date(today);
+    date.setDate(today.getDate() - (83 - index));
+    const key = dateKey(date);
+    const count = byDay.get(key) ?? 0;
+    return { key, count };
+  });
+
+  const maxCount = Math.max(...days.map((day) => day.count), 0);
+
   return (
     <Card>
-      <CardTitle className="mb-4">Weekly Activity Heatmap</CardTitle>
+      <CardTitle className="mb-3">Learning Activity (Last 12 Weeks)</CardTitle>
       <div className="grid grid-cols-12 gap-1">
-        {cells.map((level, idx) => (
-          <div
-            key={idx}
-            className="h-5 rounded-sm"
-            style={{
-              background:
-                level === 0 ? "#e5e7eb" : level === 1 ? "#99f6e4" : level === 2 ? "#5eead4" : level === 3 ? "#2dd4bf" : "#0f766e",
-            }}
-          />
-        ))}
+        {days.map((day) => {
+          const intensity = maxCount ? Math.ceil((day.count / maxCount) * 4) : 0;
+          return (
+            <div
+              key={day.key}
+              className={`h-5 rounded-sm ${levelClass(intensity)}`}
+              title={`${day.key}: ${day.count} activity events`}
+            />
+          );
+        })}
       </div>
     </Card>
   );

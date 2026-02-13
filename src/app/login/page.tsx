@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { getProviders, signIn } from "next-auth/react";
 import { ArrowRight, BrainCircuit, CheckCircle2, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -27,15 +28,11 @@ function authErrorMessage(error?: string | null) {
 }
 
 export default function LoginPage() {
+  const searchParams = useSearchParams();
   const [providers, setProviders] = useState<ProviderItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const error = searchParams.get("error");
   const errorText = useMemo(() => authErrorMessage(error), [error]);
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    setError(searchParams.get("error"));
-  }, []);
 
   useEffect(() => {
     let mounted = true;
@@ -44,7 +41,12 @@ export default function LoginPage() {
       if (!mounted) return;
       const list = Object.values(data ?? {})
         .filter((provider) => provider.id !== "email" && provider.id !== "credentials")
-        .map((provider) => ({ id: provider.id, name: provider.name }));
+        .map((provider) => ({ id: provider.id, name: provider.name }))
+        .sort((a, b) => {
+          if (a.id === "google") return -1;
+          if (b.id === "google") return 1;
+          return a.name.localeCompare(b.name);
+        });
       setProviders(list);
       setLoading(false);
     })();
@@ -63,7 +65,7 @@ export default function LoginPage() {
         <div className="space-y-4">
           <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">Welcome back to Archievr AI</h1>
           <p className="max-w-xl text-balance text-muted-foreground sm:text-lg">
-            Continue building your AI/ML roadmap with your personalized progress, resources, and topic analytics.
+            Continue your Artificial Intelligence and Machine Learning roadmap with personalized progress, resources, and analytics.
           </p>
         </div>
         <div className="grid gap-2 text-sm text-muted-foreground">
@@ -100,7 +102,7 @@ export default function LoginPage() {
             <BrainCircuit className="h-5 w-5" />
           </div>
           <CardTitle>Sign In</CardTitle>
-          <p className="text-sm text-muted-foreground">Track progress and customize your AI/ML roadmap.</p>
+          <p className="text-sm text-muted-foreground">Track progress and customize your Artificial Intelligence and Machine Learning roadmap.</p>
         </div>
 
         {errorText && (

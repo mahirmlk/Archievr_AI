@@ -24,7 +24,7 @@ export function Sidebar() {
         </div>
         <div>
           <p className="text-sm font-semibold">Archievr AI</p>
-          <p className="text-xs text-muted-foreground">ML Engineer Roadmap</p>
+          <p className="text-xs text-muted-foreground">Machine Learning Engineer Roadmap</p>
         </div>
       </div>
       <nav className="grid gap-1 p-3">

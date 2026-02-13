@@ -8,7 +8,7 @@ import {
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { GripVertical } from "lucide-react";
+import { GripVertical, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -66,32 +66,49 @@ export function RoadmapEditor({ roadmap, onRefresh }: { roadmap: Roadmap; onRefr
     <Card className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">Roadmap Editor</h3>
-        <Button
-          variant="outline"
-          onClick={async () => {
-            await fetch("/api/phases", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ roadmapId: roadmap.id, order: local.length + 1, title: "New Phase" }),
-            });
-            await onRefresh();
-          }}
-        >
-          Add Phase
-        </Button>
+        <div className="flex items-center gap-2">
+          <p className="text-xs text-muted-foreground">{local.length} phases</p>
+          <Button
+            variant="outline"
+            onClick={async () => {
+              await fetch("/api/phases", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ roadmapId: roadmap.id, order: local.length + 1, title: "New Phase" }),
+              });
+              await onRefresh();
+            }}
+          >
+            Add Phase
+          </Button>
+        </div>
       </div>
       <DndContext sensors={sensors} onDragEnd={onDragEnd}>
         <SortableContext items={local.map((p) => p.id)} strategy={verticalListSortingStrategy}>
           <div className="space-y-2">
             {local.map((phase) => (
-              <SortablePhase
-                key={phase.id}
-                id={phase.id}
-                title={phase.title}
-                onTitleChange={(id, title) =>
-                  setLocal((prev) => prev.map((item) => (item.id === id ? { ...item, title } : item)))
-                }
-              />
+              <div key={phase.id} className="flex items-center gap-2">
+                <div className="min-w-0 flex-1">
+                  <SortablePhase
+                    id={phase.id}
+                    title={phase.title}
+                    onTitleChange={(id, title) =>
+                      setLocal((prev) => prev.map((item) => (item.id === id ? { ...item, title } : item)))
+                    }
+                  />
+                </div>
+                <Button
+                  variant="destructive"
+                  size="icon"
+                  onClick={async () => {
+                    await fetch(`/api/phases/${phase.id}`, { method: "DELETE" });
+                    await onRefresh();
+                  }}
+                  aria-label="Delete phase"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </div>
             ))}
           </div>
         </SortableContext>

@@ -9,10 +9,8 @@ export async function POST(req: Request) {
 
   const phase = await prisma.phase.findFirst({
     where: { id: body.phaseId, roadmap: { userId } },
-    include: { roadmap: true },
   });
   if (!phase) return NextResponse.json({ error: "Phase not found" }, { status: 404 });
-  if (!phase.roadmap.isEditable) return NextResponse.json({ error: "Roadmap is read-only" }, { status: 403 });
 
   const topic = await prisma.topic.create({
     data: {

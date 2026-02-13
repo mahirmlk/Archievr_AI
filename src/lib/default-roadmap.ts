@@ -102,17 +102,20 @@ export const defaultRoadmap = {
           projects: [
             {
               title: "Full MLOps Pipeline",
-              description: "Airflow DAG for data ingestion to feature engineering to training to validation to deployment with monitoring",
+              description:
+                "Airflow DAG for data ingestion -> feature engineering -> training -> validation -> deployment, MLflow tracking, Docker, Kubernetes with auto-scaling, monitoring dashboard",
               difficulty: "advanced",
             },
             {
               title: "Real-Time Recommendation System",
-              description: "Feature store (Feast), Redis low-latency serving, FastAPI service, A/B testing framework",
+              description:
+                "Feature store (Feast), Redis for low-latency serving, FastAPI service, A/B testing framework, load testing with Locust",
               difficulty: "advanced",
             },
             {
               title: "Multi-Model Serving Platform",
-              description: "Deploy sklearn, PyTorch, TensorFlow models in single service with canary and rollback",
+              description:
+                "Deploy sklearn, PyTorch, TensorFlow models in single service, dynamic routing, canary deployments, automated rollback, cost optimization",
               difficulty: "advanced",
               isPortfolio: true,
             },
@@ -155,17 +158,20 @@ export const defaultRoadmap = {
           projects: [
             {
               title: "Production RAG System",
-              description: "Process 10K+ documents with hybrid retrieval and evaluation",
+              description:
+                "Process 10K+ documents, hybrid search with Pinecone + Elasticsearch, re-ranking layer, RAGAS evaluation, cost tracking per query",
               difficulty: "advanced",
             },
             {
               title: "Autonomous Research Agent",
-              description: "Multi-agent system with web search, memory, and human-in-the-loop",
+              description:
+                "Multi-agent system (Planner -> Researcher -> Writer -> Critic), web search integration, long-term memory, human-in-the-loop, Slack bot deployment",
               difficulty: "advanced",
             },
             {
               title: "Domain-Specific Fine-tuned Model",
-              description: "Fine-tune Llama with LoRA and deploy a custom inference stack",
+              description:
+                "Curate specialized dataset, fine-tune Llama 3.1 8B with LoRA, evaluate against GPT-4, quantize for edge, custom inference server with vLLM",
               difficulty: "advanced",
               isPortfolio: true,
             },
@@ -213,7 +219,7 @@ export const defaultRoadmap = {
   topProjects: [
     {
       title: "Intelligent Document Processing Platform",
-      description: "LayoutLMv3 + RAG for invoice/contract extraction with confidence scoring and human review loop",
+      description: "LayoutLMv3 + RAG for invoice/contract data extraction with confidence scoring and human review loop",
       tech: ["LayoutLMv3", "RAG", "FastAPI", "React"],
       impact: "$50K+ cost savings simulation",
       difficulty: "advanced",
@@ -221,7 +227,7 @@ export const defaultRoadmap = {
     },
     {
       title: "Real-Time Fraud Detection at Scale",
-      description: "Kafka + Flink + XGBoost with under 50ms latency, high uptime, and automated retraining",
+      description: "Kafka + Flink + XGBoost ensemble with <50ms latency, 99.9% uptime, automated retraining",
       tech: ["Kafka", "Flink", "XGBoost", "Redis", "FastAPI"],
       impact: "Production-grade SLAs",
       difficulty: "advanced",
@@ -229,7 +235,7 @@ export const defaultRoadmap = {
     },
     {
       title: "Multi-Agent Coding Assistant",
-      description: "LangGraph + CodeT5+ with repository-wide context and CI integration",
+      description: "LangGraph + CodeT5+ with repository-wide context, GitHub Actions integration",
       tech: ["LangGraph", "CodeT5+", "Vector DB", "Tree-sitter"],
       impact: "Agentic AI beyond basic prompting",
       difficulty: "advanced",
@@ -237,9 +243,9 @@ export const defaultRoadmap = {
     },
     {
       title: "Personalized Learning Recommendation Engine",
-      description: "Two-tower neural nets + RL with cold-start handling",
+      description: "Two-tower neural networks + RL with cold start handling, 15% engagement improvement",
       tech: ["Two-Tower Networks", "RL", "FastAPI", "React"],
-      impact: "15% engagement improvement simulation",
+      impact: "Metric-driven development",
       difficulty: "advanced",
       isPortfolio: true,
     },

@@ -32,6 +32,13 @@ const providers = [
         GoogleProvider({
           clientId: googleId,
           clientSecret: googleSecret,
+          authorization: {
+            params: {
+              prompt: "consent",
+              access_type: "offline",
+              response_type: "code",
+            },
+          },
           allowDangerousEmailAccountLinking: true,
         }),
       ]

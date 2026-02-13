@@ -25,7 +25,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   const roadmap = await prisma.roadmap.findFirst({ where: { id, userId } });
   if (!roadmap) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  if (!roadmap.isEditable) return NextResponse.json({ error: "Default roadmap is read-only. Clone to edit." }, { status: 403 });
 
   const updated = await prisma.roadmap.update({
     where: { id },

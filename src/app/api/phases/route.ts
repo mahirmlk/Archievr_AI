@@ -11,7 +11,6 @@ export async function POST(req: Request) {
     where: { id: body.roadmapId, userId },
   });
   if (!roadmap) return NextResponse.json({ error: "Roadmap not found" }, { status: 404 });
-  if (!roadmap.isEditable) return NextResponse.json({ error: "Roadmap is read-only" }, { status: 403 });
 
   const phase = await prisma.phase.create({
     data: {

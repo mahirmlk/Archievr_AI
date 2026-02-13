@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 const highlights = [
   {
     title: "Adaptive Roadmaps",
-    description: "Break your AI/ML journey into focused phases and reorder topics as your goals change.",
+    description: "Break your Artificial Intelligence and Machine Learning journey into focused phases and reorder topics as goals evolve.",
     icon: Target,
   },
   {
@@ -39,10 +39,10 @@ export default async function HomePage() {
             </Badge>
             <div className="space-y-4">
               <h1 className="text-4xl font-semibold tracking-tight sm:text-5xl">
-                Build your AI/ML roadmap with a cleaner UI and consistent design system.
+                Build your Artificial Intelligence and Machine Learning roadmap with clarity and speed.
               </h1>
               <p className="max-w-2xl text-balance text-muted-foreground sm:text-lg">
-                The project now uses the Magic-style visual language for layout and styling while keeping your current auth and dashboard flows intact.
+                Plan deeply, track progress in real time, and keep resources connected to each topic in one focused workspace.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-3">

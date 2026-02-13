@@ -1,7 +1,7 @@
 "use client";
 
 import { hierarchy, tree, type HierarchyPointLink, type HierarchyPointNode } from "d3";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import { useRoadmapStore } from "@/stores/roadmapStore";
 import type { Roadmap } from "@/types/roadmap";
 import { PhaseNode } from "@/components/roadmap/phase-node";
@@ -15,7 +15,7 @@ type TreeNode = {
 export function RoadmapTree({ roadmap }: { roadmap: Roadmap }) {
   const setRoadmap = useRoadmapStore((s) => s.loadRoadmap);
 
-  useMemo(() => {
+  useEffect(() => {
     void setRoadmap(roadmap.id);
   }, [roadmap.id, setRoadmap]);
 

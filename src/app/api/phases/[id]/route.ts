@@ -10,10 +10,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   const phase = await prisma.phase.findFirst({
     where: { id, roadmap: { userId } },
-    include: { roadmap: true },
   });
   if (!phase) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  if (!phase.roadmap.isEditable) return NextResponse.json({ error: "Roadmap is read-only" }, { status: 403 });
 
   const updated = await prisma.phase.update({
     where: { id },
@@ -35,10 +33,8 @@ export async function DELETE(_: Request, { params }: { params: Promise<{ id: str
 
   const phase = await prisma.phase.findFirst({
     where: { id, roadmap: { userId } },
-    include: { roadmap: true },
   });
   if (!phase) return NextResponse.json({ error: "Not found" }, { status: 404 });
-  if (!phase.roadmap.isEditable) return NextResponse.json({ error: "Roadmap is read-only" }, { status: 403 });
 
   await prisma.phase.delete({ where: { id } });
   return NextResponse.json({ ok: true });
