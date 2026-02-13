@@ -1,7 +1,6 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions, getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
 
 export const authOptions: NextAuthOptions = {
@@ -24,12 +23,18 @@ export const authOptions: NextAuthOptions = {
           where: { email: credentials.email }
         });
 
-        if (user && user.password && await bcrypt.compare(credentials.password, user.password)) {
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-          };
+        if (user && user.password) {
+          // Dynamically import bcrypt
+          const bcrypt = (await import('bcryptjs')).default;
+          const isValid = await bcrypt.compare(credentials.password, user.password);
+          
+          if (isValid) {
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name,
+            };
+          }
         }
 
         return null;

@@ -24,8 +24,8 @@ const hashPassword = async (password: string) => {
 };
 
 async function main() {
-  const demoEmail = "demo@archievr.ai";
-  const demoPassword = await hashPassword("demo123"); // Default demo password
+  const demoEmail = "achivr@member.com";
+  const demoPassword = await hashPassword("achiev2026"); // Updated demo password
 
   const user = await prisma.user.upsert({
     where: { email: demoEmail },
