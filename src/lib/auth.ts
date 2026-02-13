@@ -1,54 +1,41 @@
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import { NextAuthOptions, getServerSession } from "next-auth";
-import GitHubProvider from "next-auth/providers/github";
-import GoogleProvider from "next-auth/providers/google";
+import CredentialsProvider from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/prisma";
-
-function envValue(...keys: string[]) {
-  for (const key of keys) {
-    const value = process.env[key];
-    if (value && value.trim().length > 0) return value;
-  }
-  return undefined;
-}
-
-const githubId = envValue("GITHUB_ID", "GITHUB_CLIENT_ID");
-const githubSecret = envValue("GITHUB_SECRET", "GITHUB_CLIENT_SECRET");
-const googleId = envValue("GOOGLE_CLIENT_ID", "GOOGLE_ID");
-const googleSecret = envValue("GOOGLE_CLIENT_SECRET", "GOOGLE_SECRET");
-
-const providers = [
-  ...(githubId && githubSecret
-    ? [
-        GitHubProvider({
-          clientId: githubId,
-          clientSecret: githubSecret,
-          allowDangerousEmailAccountLinking: true,
-        }),
-      ]
-    : []),
-  ...(googleId && googleSecret
-    ? [
-        GoogleProvider({
-          clientId: googleId,
-          clientSecret: googleSecret,
-          authorization: {
-            params: {
-              prompt: "consent",
-              access_type: "offline",
-              response_type: "code",
-            },
-          },
-          allowDangerousEmailAccountLinking: true,
-        }),
-      ]
-    : []),
-];
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: { strategy: "database" },
-  providers,
+  providers: [
+    CredentialsProvider({
+      name: "Credentials",
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" }
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        // Find user by email
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email }
+        });
+
+        if (user && user.password && await bcrypt.compare(credentials.password, user.password)) {
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+          };
+        }
+
+        return null;
+      }
+    })
+  ],
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
     signIn: "/login",

@@ -1,26 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useEffect, useMemo, useState } from "react";
+import { Suspense, useState, useMemo } from "react";
 import { useSearchParams } from "next/navigation";
-import { getProviders, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { ArrowRight, BrainCircuit, CheckCircle2, LockKeyhole } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { FlickeringGrid } from "@/components/magicui/flickering-grid";
-
-type ProviderItem = { id: string; name: string };
 
 function authErrorMessage(error?: string | null) {
   if (!error) return null;
   const map: Record<string, string> = {
-    OAuthSignin: "OAuth sign-in could not be started.",
-    OAuthCallback: "OAuth callback failed. Check your provider redirect URI.",
-    OAuthCreateAccount: "Account creation from OAuth failed.",
-    OAuthAccountNotLinked: "This email is already linked to another provider.",
     Configuration: "Auth configuration error.",
-    AccessDenied: "Access was denied by the auth provider.",
+    AccessDenied: "Access was denied.",
     Verification: "Verification failed. Try signing in again.",
     Default: "Sign in failed. Please try again.",
   };
@@ -29,31 +25,33 @@ function authErrorMessage(error?: string | null) {
 
 function LoginPageContent() {
   const searchParams = useSearchParams();
-  const [providers, setProviders] = useState<ProviderItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const error = searchParams.get("error");
   const errorText = useMemo(() => authErrorMessage(error), [error]);
 
-  useEffect(() => {
-    let mounted = true;
-    (async () => {
-      const data = await getProviders();
-      if (!mounted) return;
-      const list = Object.values(data ?? {})
-        .filter((provider) => provider.id !== "email" && provider.id !== "credentials")
-        .map((provider) => ({ id: provider.id, name: provider.name }))
-        .sort((a, b) => {
-          if (a.id === "google") return -1;
-          if (b.id === "google") return 1;
-          return a.name.localeCompare(b.name);
-        });
-      setProviders(list);
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      const result = await signIn("credentials", {
+        email,
+        password,
+        callbackUrl: "/dashboard",
+        redirect: true,
+      });
+      
+      if (result?.error) {
+        console.error("Sign in error:", result.error);
+      }
+    } catch (err) {
+      console.error("Sign in error:", err);
+    } finally {
       setLoading(false);
-    })();
-    return () => {
-      mounted = false;
-    };
-  }, []);
+    }
+  };
 
   return (
     <main className="mx-auto grid min-h-screen w-full max-w-6xl items-center gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.1fr_0.9fr] lg:px-8">
@@ -111,29 +109,34 @@ function LoginPageContent() {
           </p>
         )}
 
-        <div className="relative space-y-3">
-          {loading ? (
-            <Button className="w-full" disabled>
-              Loading providers...
-            </Button>
-          ) : providers.length === 0 ? (
-            <p className="rounded-lg border border-neutral-800 bg-neutral-900 p-3 text-sm text-neutral-400">
-              No OAuth providers are configured. Set GitHub/Google credentials in environment variables.
-            </p>
-          ) : (
-            providers.map((provider) => (
-              <Button
-                key={provider.id}
-                className="w-full"
-                variant="outline"
-                onClick={() => signIn(provider.id, { callbackUrl: "/dashboard" })}
-              >
-                Continue with {provider.name}
-                <ArrowRight className="ml-2 h-4 w-4 text-neutral-400" />
-              </Button>
-            ))
-          )}
-        </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <Input
+              id="email"
+              type="email"
+              placeholder="your@email.com"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <Input
+              id="password"
+              type="password"
+              placeholder="••••••••"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </div>
+          <Button className="w-full" type="submit" disabled={loading}>
+            {loading ? "Signing in..." : "Sign in"}
+            <ArrowRight className="ml-2 h-4 w-4 text-neutral-400" />
+          </Button>
+        </form>
         <div className="relative text-center">
           <Link href="/" className="text-xs text-neutral-400 transition-colors hover:text-white">
             Return to home

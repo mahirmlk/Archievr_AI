@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcryptjs";
 import { defaultRoadmap } from "../src/lib/data/default-roadmap";
 
 type DefaultTopicResource = {
@@ -16,13 +17,24 @@ function topicResources(topic: unknown): DefaultTopicResource[] {
 
 const prisma = new PrismaClient();
 
+// Hash the default password for the demo user
+const hashPassword = async (password: string) => {
+  const saltRounds = 10;
+  return await bcrypt.hash(password, saltRounds);
+};
+
 async function main() {
   const demoEmail = "demo@archievr.ai";
+  const demoPassword = await hashPassword("demo123"); // Default demo password
 
   const user = await prisma.user.upsert({
     where: { email: demoEmail },
     update: {},
-    create: { email: demoEmail, name: "Demo User" },
+    create: { 
+      email: demoEmail, 
+      name: "Demo User",
+      password: demoPassword 
+    },
   });
 
   const existing = await prisma.roadmap.findFirst({

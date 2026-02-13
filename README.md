@@ -4,7 +4,7 @@ Full-stack roadmap tracker built with Next.js App Router, TypeScript, Tailwind, 
 
 ## Implemented Features
 
-- GitHub + Google authentication via NextAuth
+- Credentials-based authentication via NextAuth
 - Prisma schema for users, roadmaps, phases, topics, projects, progress, resources, top projects
 - Default roadmap auto-created on first `/api/roadmaps` fetch
 - Interactive roadmap page with:
@@ -68,10 +68,6 @@ Set these in your local environment or Vercel project settings:
 DATABASE_URL=
 NEXTAUTH_SECRET=
 NEXTAUTH_URL=
-GITHUB_ID=
-GITHUB_SECRET=
-GOOGLE_CLIENT_ID=
-GOOGLE_CLIENT_SECRET=
 BLOB_READ_WRITE_TOKEN=
 ```
 
