@@ -76,7 +76,7 @@ async function main() {
           order: phase.order,
           title: phase.title,
           description: phase.description,
-          duration: phase.duration,
+          duration: (phase as { duration?: string }).duration ?? null,
           topics: {
             create: phase.topics.map((topic) => ({
               order: topic.order,
