@@ -1,5 +1,11 @@
 import Link from "next/link";
-import { FolderOpen, Map as MapIcon, Rocket } from "lucide-react";
+import {
+  FolderOpen,
+  Map as MapIcon,
+  Rocket,
+  ArrowRight,
+  Sparkles,
+} from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSession } from "@/lib/auth";
 import { ensureDefaultRoadmap } from "@/lib/default-roadmap-seed";
@@ -15,55 +21,63 @@ export default async function DashboardPage() {
   const userId = session?.user?.id ?? "";
   await ensureDefaultRoadmap(userId);
 
-  const [roadmaps, progressRows, topicCount, topics, resources] = await Promise.all([
-    prisma.roadmap.findMany({
-      where: { userId },
-      orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
-      include: {
-        phases: {
-          orderBy: { order: "asc" },
-          include: {
-            topics: {
-              orderBy: { order: "asc" },
-              include: { resources: true, projects: true },
+  const [roadmaps, progressRows, topicCount, topics, resources] =
+    await Promise.all([
+      prisma.roadmap.findMany({
+        where: { userId },
+        orderBy: [{ isDefault: "desc" }, { createdAt: "asc" }],
+        include: {
+          phases: {
+            orderBy: { order: "asc" },
+            include: {
+              topics: {
+                orderBy: { order: "asc" },
+                include: { resources: true, projects: true },
+              },
             },
           },
+          topProjects: true,
         },
-        topProjects: true,
-      },
-    }),
-    prisma.progress.findMany({ where: { userId }, include: { topic: { include: { phase: true } } } }),
-    prisma.topic.count({ where: { phase: { roadmap: { userId } } } }),
-    prisma.topic.findMany({
-      where: { phase: { roadmap: { userId } } },
-      include: { phase: true },
-      orderBy: [{ phase: { order: "asc" } }, { order: "asc" }],
-    }),
-    prisma.resource.findMany({
-      where: { userId },
-      include: { topic: true },
-      orderBy: { updatedAt: "desc" },
-      take: 12,
-    }),
-  ]);
+      }),
+      prisma.progress.findMany({
+        where: { userId },
+        include: { topic: { include: { phase: true } } },
+      }),
+      prisma.topic.count({ where: { phase: { roadmap: { userId } } } }),
+      prisma.topic.findMany({
+        where: { phase: { roadmap: { userId } } },
+        include: { phase: true },
+        orderBy: [{ phase: { order: "asc" } }, { order: "asc" }],
+      }),
+      prisma.resource.findMany({
+        where: { userId },
+        include: { topic: true },
+        orderBy: { updatedAt: "desc" },
+        take: 12,
+      }),
+    ]);
 
-  const completed = progressRows.filter((progress) => progress.status === "completed" || progress.status === "mastered").length;
-  const inProgress = progressRows.filter((progress) => progress.status === "in_progress").length;
+  const completed = progressRows.filter(
+    (p) => p.status === "completed" || p.status === "mastered"
+  ).length;
+  const inProgress = progressRows.filter(
+    (p) => p.status === "in_progress"
+  ).length;
   const notStarted = Math.max(topicCount - completed - inProgress, 0);
-  const overallCompletion = topicCount ? Math.round((completed / topicCount) * 100) : 0;
+  const overallCompletion = topicCount
+    ? Math.round((completed / topicCount) * 100)
+    : 0;
 
-  const byPhase = new Map<string, { phaseId: string; title: string; total: number; completed: number; percent: number }>();
-  for (const row of progressRows) {
-    const phaseId = row.topic.phase.id;
-    const current = byPhase.get(phaseId) ?? {
-      phaseId,
-      title: row.topic.phase.title,
-      total: 0,
-      completed: 0,
-      percent: 0,
-    };
-    byPhase.set(phaseId, current);
-  }
+  const byPhase = new Map<
+    string,
+    {
+      phaseId: string;
+      title: string;
+      total: number;
+      completed: number;
+      percent: number;
+    }
+  >();
 
   for (const topic of topics) {
     const phaseId = topic.phase.id;
@@ -86,7 +100,9 @@ export default async function DashboardPage() {
 
   const phaseBreakdown = Array.from(byPhase.values()).map((phase) => ({
     ...phase,
-    percent: phase.total ? Math.round((phase.completed / phase.total) * 100) : 0,
+    percent: phase.total
+      ? Math.round((phase.completed / phase.total) * 100)
+      : 0,
   }));
 
   const stats = {
@@ -98,100 +114,167 @@ export default async function DashboardPage() {
     phaseBreakdown,
   };
 
-  const activeRoadmap = roadmaps[0] ?? null;
-  const topicSections =
-    activeRoadmap?.phases.flatMap((phase) =>
-      phase.topics.map((topic) => ({
-        phaseTitle: phase.title,
-        topic,
-      })),
-    ) ?? [];
-
-  const roadmapProjectCount =
-    (activeRoadmap?.topProjects.length ?? 0) +
-    (activeRoadmap?.phases.reduce((total, phase) => total + phase.topics.reduce((sum, topic) => sum + topic.projects.length, 0), 0) ?? 0);
-
   return (
     <div className="space-y-5">
       <StatsCards stats={stats} />
       <RealtimeProgressPanel initialStats={stats} />
 
-      <Card className="space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="inline-flex items-center gap-2">
-            <MapIcon className="h-4 w-4 text-neutral-400" />
-            Roadmap Overview
-          </CardTitle>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/roadmap">Open Full Roadmap</Link>
-          </Button>
+      {/* All Roadmaps */}
+      <section className="space-y-3">
+        <div className="flex items-center gap-3">
+          <Sparkles className="h-4 w-4 text-neutral-500" />
+          <h2 className="font-semibold text-zinc-100">Your Roadmaps</h2>
+          <Badge className="text-xs">{roadmaps.length} tracks</Badge>
         </div>
-        <div className="grid gap-3 md:grid-cols-2">
-          {phaseBreakdown.map((phase) => (
-            <div key={phase.phaseId} className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4 transition-all duration-300 hover:border-neutral-700">
-              <div className="mb-2 flex items-center justify-between">
-                <p className="font-medium text-zinc-100">{phase.title}</p>
-                <p className="text-xs text-neutral-400">{phase.completed}/{phase.total}</p>
-              </div>
-              <Progress value={phase.percent} />
-              <p className="mt-2 text-xs text-neutral-400">{phase.percent}% complete</p>
-            </div>
-          ))}
-        </div>
-      </Card>
 
-      <Card className="space-y-3">
-        <div className="flex items-center justify-between gap-2">
-          <CardTitle className="inline-flex items-center gap-2">
-            <FolderOpen className="h-4 w-4 text-neutral-400" />
-            Topic Resources
-          </CardTitle>
-          <Button asChild variant="outline" size="sm">
-            <Link href="/resources">Manage All Resources</Link>
-          </Button>
-        </div>
-        <div className="grid gap-3 md:grid-cols-2">
-          {topicSections.map(({ phaseTitle, topic }) => (
-            <div key={topic.id} className="rounded-xl border border-neutral-800 bg-neutral-950/60 p-4 transition-all duration-300 hover:border-neutral-700">
-              <div className="mb-2 flex items-start justify-between gap-2">
-                <div>
-                  <p className="font-medium text-zinc-100">{topic.title}</p>
-                  <p className="text-xs text-neutral-500">{phaseTitle}</p>
-                </div>
-                <Badge>{topic.resources.length} resources</Badge>
-              </div>
-              <div className="space-y-2">
-                {topic.resources.length ? (
-                  topic.resources.slice(0, 3).map((resource) => (
-                    <div key={resource.id} className="rounded-lg border border-neutral-800 bg-neutral-900/60 p-2">
-                      <p className="text-sm text-zinc-100">{resource.title}</p>
-                      <p className="text-xs text-neutral-400">{resource.type}</p>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {roadmaps.map((roadmap) => {
+            const rmTopics = roadmap.phases.reduce(
+              (acc, phase) => acc + phase.topics.length,
+              0
+            );
+            const rmCompleted = roadmap.phases.reduce(
+              (acc, phase) =>
+                acc +
+                phase.topics.filter((t) =>
+                  progressRows.some(
+                    (p) =>
+                      p.topicId === t.id &&
+                      (p.status === "completed" || p.status === "mastered")
+                  )
+                ).length,
+              0
+            );
+            const rmPercent = rmTopics
+              ? Math.round((rmCompleted / rmTopics) * 100)
+              : 0;
+
+            return (
+              <Link key={roadmap.id} href={`/roadmap/${roadmap.id}`}>
+                <Card className="group h-full p-5 transition-all duration-200 hover:border-neutral-700">
+                  <div className="space-y-4">
+                    <div className="flex items-start justify-between">
+                      <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-500 transition-colors group-hover:text-neutral-300">
+                        <MapIcon className="size-4" />
+                      </div>
+                      {roadmap.isDefault && (
+                        <span className="rounded-full border border-neutral-800 bg-neutral-900 px-2 py-0.5 text-xs text-neutral-500">
+                          Default
+                        </span>
+                      )}
                     </div>
-                  ))
-                ) : (
-                  <p className="text-xs text-neutral-500">No resources linked yet. Add resources in Roadmap edit mode or Resources page.</p>
-                )}
+
+                    <div>
+                      <h3 className="font-semibold text-zinc-100">
+                        {roadmap.name}
+                      </h3>
+                      <p className="mt-1 text-xs text-neutral-500">
+                        {roadmap.phases.length} phases · {rmTopics} topics
+                      </p>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs">
+                        <span className="text-neutral-500">Progress</span>
+                        <span className="text-neutral-400">{rmPercent}%</span>
+                      </div>
+                      <Progress value={rmPercent} className="h-1.5" />
+                    </div>
+
+                    <div className="flex items-center justify-between">
+                      <p className="text-xs text-neutral-500">
+                        {rmCompleted}/{rmTopics} completed
+                      </p>
+                      <ArrowRight className="size-4 text-neutral-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-neutral-400" />
+                    </div>
+                  </div>
+                </Card>
+              </Link>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Phase Breakdown */}
+      <Card className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="inline-flex items-center gap-2">
+            <MapIcon className="h-4 w-4 text-neutral-500" />
+            Phase Breakdown
+          </CardTitle>
+          <Button asChild variant="outline" size="sm">
+            <Link href="/roadmap">Open Roadmap</Link>
+          </Button>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {phaseBreakdown.map((phase) => (
+            <div
+              key={phase.phaseId}
+              className="rounded-xl border border-neutral-800 bg-neutral-950/40 p-4 transition-all duration-200 hover:border-neutral-700"
+            >
+              <div className="mb-3 flex items-center justify-between">
+                <p className="text-sm font-medium text-zinc-100">
+                  {phase.title}
+                </p>
+                <span className="text-xs text-neutral-500">
+                  {phase.completed}/{phase.total}
+                </span>
               </div>
-              <Button asChild variant="ghost" size="sm" className="mt-3">
-                <Link href={`/topic/${topic.id}`}>Open Topic</Link>
-              </Button>
+              <Progress value={phase.percent} className="h-1.5" />
+              <p className="mt-2 text-xs text-neutral-500">
+                {phase.percent}% complete
+              </p>
             </div>
           ))}
         </div>
       </Card>
 
-      <Card className="space-y-2">
-        <CardTitle className="inline-flex items-center gap-2">
-          <Rocket className="h-4 w-4 text-neutral-400" />
-          Resources and Projects Summary
-        </CardTitle>
-        <p className="text-sm text-neutral-400">
-          {resources.length} saved resources and {roadmapProjectCount} roadmap projects are available in your resources area.
-        </p>
-        <Button asChild variant="outline" size="sm">
-          <Link href="/resources">Open Resources and Projects</Link>
-        </Button>
-      </Card>
+      {/* Quick Actions */}
+      <div className="grid gap-3 sm:grid-cols-3">
+        <Link href="/roadmap">
+          <Card className="group p-5 transition-all duration-200 hover:border-neutral-700">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-500 group-hover:text-neutral-300">
+                <MapIcon className="size-4" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-zinc-100">View Roadmap</p>
+                <p className="text-xs text-neutral-500">Explore & track</p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+
+        <Link href="/resources">
+          <Card className="group p-5 transition-all duration-200 hover:border-neutral-700">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-500 group-hover:text-neutral-300">
+                <FolderOpen className="size-4" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-zinc-100">Resources</p>
+                <p className="text-xs text-neutral-500">
+                  {resources.length} saved
+                </p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+
+        <Link href="/roadmap">
+          <Card className="group p-5 transition-all duration-200 hover:border-neutral-700">
+            <div className="flex items-center gap-3">
+              <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-500 group-hover:text-neutral-300">
+                <Rocket className="size-4" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-zinc-100">Projects</p>
+                <p className="text-xs text-neutral-500">Build & deploy</p>
+              </div>
+            </div>
+          </Card>
+        </Link>
+      </div>
     </div>
   );
 }

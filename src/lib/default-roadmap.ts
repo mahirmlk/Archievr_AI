@@ -1,1 +1,1 @@
-export { defaultRoadmap } from "@/lib/data/default-roadmap";
+export { defaultRoadmap, aiEngineerRoadmap, mlEngineerRoadmap, roadmaps } from "@/lib/data";

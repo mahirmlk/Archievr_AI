@@ -1,5 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { defaultRoadmap } from "@/lib/data/default-roadmap";
+import { aiEngineerRoadmap } from "@/lib/data/ai-engineer-roadmap";
+import { mlEngineerRoadmap } from "@/lib/data/ml-engineer-roadmap";
 
 type DefaultTopicResource = {
   title: string;
@@ -14,19 +16,51 @@ function topicResources(topic: unknown): DefaultTopicResource[] {
   return Array.isArray(resources) ? resources : [];
 }
 
-export function defaultRoadmapCreateData(userId: string) {
+type RoadmapData = {
+  name: string;
+  description: string;
+  phases: readonly {
+    order: number;
+    title: string;
+    description: string;
+    duration?: string;
+    topics: readonly {
+      order: number;
+      title: string;
+      description: string;
+      skills: readonly string[];
+      resources: readonly unknown[];
+      projects: readonly {
+        title: string;
+        description: string;
+        difficulty: string;
+        isPortfolio?: boolean;
+      }[];
+    }[];
+  }[];
+  topProjects: readonly {
+    title: string;
+    description: string;
+    tech: readonly string[];
+    impact: string;
+    difficulty: string;
+    isPortfolio: boolean;
+  }[];
+};
+
+export function roadmapCreateData(userId: string, roadmap: RoadmapData, isDefault: boolean) {
   return {
     userId,
-    name: defaultRoadmap.name,
-    description: defaultRoadmap.description,
-    isDefault: true,
+    name: roadmap.name,
+    description: roadmap.description,
+    isDefault,
     isEditable: true,
     phases: {
-      create: defaultRoadmap.phases.map((phase) => ({
+      create: roadmap.phases.map((phase) => ({
         order: phase.order,
         title: phase.title,
         description: phase.description,
-        duration: phase.duration,
+        duration: phase.duration ?? null,
         topics: {
           create: phase.topics.map((topic) => ({
             order: topic.order,
@@ -56,7 +90,7 @@ export function defaultRoadmapCreateData(userId: string) {
       })),
     },
     topProjects: {
-      create: defaultRoadmap.topProjects.map((project) => ({
+      create: roadmap.topProjects.map((project) => ({
         title: project.title,
         description: project.description,
         tech: [...project.tech],
@@ -68,77 +102,83 @@ export function defaultRoadmapCreateData(userId: string) {
   };
 }
 
+// Keep backward compat
+export function defaultRoadmapCreateData(userId: string) {
+  return roadmapCreateData(userId, defaultRoadmap as unknown as RoadmapData, true);
+}
+
+const ALL_ROADMAPS = [
+  { data: defaultRoadmap, isDefault: true },
+  { data: aiEngineerRoadmap, isDefault: false },
+  { data: mlEngineerRoadmap, isDefault: false },
+] as const;
+
 export async function ensureDefaultRoadmap(userId: string) {
   if (!userId) return null;
 
-  const existingMapping = await prisma.userRoadmap.findFirst({
-    where: { userId, isDefault: true },
-    select: {
-      id: true,
-      roadmapId: true,
-      isEditable: true,
-      roadmap: { select: { isEditable: true } },
-    },
+  // First, clean up any duplicate roadmaps (same name for same user)
+  const allUserRoadmaps = await prisma.roadmap.findMany({
+    where: { userId },
+    select: { id: true, name: true, isDefault: true, createdAt: true },
+    orderBy: { createdAt: "asc" },
   });
 
-  if (existingMapping) {
-    if (!existingMapping.isEditable) {
-      await prisma.userRoadmap.update({
-        where: { id: existingMapping.id },
-        data: { isEditable: true },
-      });
+  // Group by name and delete duplicates (keep the oldest)
+  const seen = new Map<string, string>();
+  const duplicateIds: string[] = [];
+  for (const rm of allUserRoadmaps) {
+    if (seen.has(rm.name)) {
+      duplicateIds.push(rm.id);
+    } else {
+      seen.set(rm.name, rm.id);
     }
-    if (!existingMapping.roadmap.isEditable) {
-      await prisma.roadmap.update({
-        where: { id: existingMapping.roadmapId },
-        data: { isEditable: true },
-      });
-    }
-    return existingMapping.roadmapId;
   }
 
-  const existingDefaultRoadmap = await prisma.roadmap.findFirst({
-    where: { userId, isDefault: true },
-    select: { id: true, isEditable: true },
-  });
-
-  if (existingDefaultRoadmap) {
-    await prisma.userRoadmap.create({
-      data: {
-        userId,
-        roadmapId: existingDefaultRoadmap.id,
-        isDefault: true,
-        isEditable: true,
-      },
+  if (duplicateIds.length > 0) {
+    await prisma.roadmap.deleteMany({
+      where: { id: { in: duplicateIds } },
     });
-
-    if (!existingDefaultRoadmap.isEditable) {
-      await prisma.roadmap.update({
-        where: { id: existingDefaultRoadmap.id },
-        data: { isEditable: true },
-      });
-    }
-
-    return existingDefaultRoadmap.id;
   }
 
-  const created = await prisma.$transaction(async (tx) => {
-    const roadmap = await tx.roadmap.create({
-      data: defaultRoadmapCreateData(userId),
-      select: { id: true },
-    });
-
-    await tx.userRoadmap.create({
-      data: {
-        userId,
-        roadmapId: roadmap.id,
-        isDefault: true,
-        isEditable: true,
-      },
-    });
-
-    return roadmap;
+  // Now get the clean list
+  const existingRoadmaps = await prisma.roadmap.findMany({
+    where: { userId },
+    select: { id: true, name: true, isDefault: true },
   });
 
-  return created.id;
+  const existingNames = new Set(existingRoadmaps.map((r) => r.name));
+
+  // Create any missing roadmaps
+  for (const { data, isDefault } of ALL_ROADMAPS) {
+    const roadmapData = data as unknown as RoadmapData;
+    if (existingNames.has(roadmapData.name)) continue;
+
+    await prisma.$transaction(async (tx) => {
+      const roadmap = await tx.roadmap.create({
+        data: roadmapCreateData(userId, roadmapData, isDefault),
+        select: { id: true },
+      });
+
+      // Check if UserRoadmap exists before creating
+      const existingUr = await tx.userRoadmap.findFirst({
+        where: { userId, roadmapId: roadmap.id },
+      });
+      if (!existingUr) {
+        await tx.userRoadmap.create({
+          data: {
+            userId,
+            roadmapId: roadmap.id,
+            isDefault,
+            isEditable: true,
+          },
+        });
+      }
+    });
+  }
+
+  // Return the default roadmap id
+  const defaultRm = existingRoadmaps.find((r) => r.isDefault) ??
+    (await prisma.roadmap.findFirst({ where: { userId, isDefault: true } }));
+
+  return defaultRm?.id ?? null;
 }

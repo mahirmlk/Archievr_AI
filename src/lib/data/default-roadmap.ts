@@ -5,7 +5,6 @@ export const defaultRoadmap = {
     {
       order: 1,
       title: "Phase 1: Foundation & Prerequisites",
-      duration: "Weeks 1-8",
       description: "Programming, CS fundamentals, and mathematics",
       topics: [
         {
@@ -45,7 +44,6 @@ export const defaultRoadmap = {
     {
       order: 2,
       title: "Phase 2: Core Machine Learning",
-      duration: "Weeks 9-20",
       description: "Classical ML, deep learning fundamentals",
       topics: [
         {
@@ -92,15 +90,20 @@ export const defaultRoadmap = {
     {
       order: 3,
       title: "Phase 3: MLOps & Production Engineering",
-      duration: "Weeks 21-32",
       description: "Data engineering, deployment, monitoring",
       topics: [
-        { order: 1, title: "3.1 Data Engineering & Pipelines", description: "Workflow orchestration and big data processing", skills: ["Apache Airflow", "Prefect", "Dagster", "Apache Spark", "Dask", "Ray", "Feast", "Tecton", "Great Expectations", "Pandera"], resources: [],
-          projects: [] },
-        { order: 2, title: "3.2 Model Deployment & Serving", description: "Production deployment patterns", skills: ["FastAPI", "Flask", "Docker", "Kubernetes", "KServe", "BentoML", "TensorFlow Lite", "ONNX Runtime", "Quantization"], resources: [],
-          projects: [] },
-        { order: 3, title: "3.3 Experiment Tracking & Model Registry", description: "MLflow, Weights & Biases, DVC", skills: ["MLflow", "Weights & Biases", "DVC", "Git LFS"], resources: [],
-          projects: [] },
+        {
+          order: 1, title: "3.1 Data Engineering & Pipelines", description: "Workflow orchestration and big data processing", skills: ["Apache Airflow", "Prefect", "Dagster", "Apache Spark", "Dask", "Ray", "Feast", "Tecton", "Great Expectations", "Pandera"], resources: [],
+          projects: []
+        },
+        {
+          order: 2, title: "3.2 Model Deployment & Serving", description: "Production deployment patterns", skills: ["FastAPI", "Flask", "Docker", "Kubernetes", "KServe", "BentoML", "TensorFlow Lite", "ONNX Runtime", "Quantization"], resources: [],
+          projects: []
+        },
+        {
+          order: 3, title: "3.3 Experiment Tracking & Model Registry", description: "MLflow, Weights & Biases, DVC", skills: ["MLflow", "Weights & Biases", "DVC", "Git LFS"], resources: [],
+          projects: []
+        },
         {
           order: 4,
           title: "3.4 Monitoring & Observability",
@@ -134,7 +137,6 @@ export const defaultRoadmap = {
     {
       order: 4,
       title: "Phase 4: LLM Engineering & AI Agents",
-      duration: "Weeks 33-44",
       description: "Large language models, RAG, agents",
       topics: [
         {
@@ -194,7 +196,6 @@ export const defaultRoadmap = {
     {
       order: 5,
       title: "Phase 5: Specialization & Advanced Topics",
-      duration: "Weeks 45-52",
       description: "Choose specialization track",
       topics: [
         {

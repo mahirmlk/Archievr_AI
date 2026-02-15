@@ -1,0 +1,737 @@
+export const mlEngineerRoadmap = {
+    name: "Machine Learning Engineer Roadmap 2026",
+    description: "From fundamentals to production ML systems with classical ML, deep learning, and MLOps",
+    phases: [
+        {
+            order: 1,
+            title: "Phase 1: Mathematical Foundations & Programming",
+            description: "Mathematics, statistics, and Python mastery",
+            topics: [
+                {
+                    order: 1,
+                    title: "1.1 Linear Algebra & Calculus",
+                    description: "Mathematical foundations for ML",
+                    skills: [
+                        "Vectors & Matrices",
+                        "Matrix Operations",
+                        "Eigenvalues & Eigenvectors",
+                        "SVD & PCA",
+                        "Derivatives & Gradients",
+                        "Partial Derivatives",
+                        "Chain Rule",
+                        "Optimization Theory",
+                        "Convex Optimization",
+                        "Lagrange Multipliers"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Linear Regression from Scratch",
+                            description: "Implement gradient descent and normal equation without using ML libraries",
+                            difficulty: "beginner",
+                        },
+                        {
+                            title: "PCA Visualizer",
+                            description: "Build dimensionality reduction tool with eigenvalue decomposition visualization",
+                            difficulty: "beginner",
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "1.2 Probability & Statistics",
+                    description: "Statistical foundations and hypothesis testing",
+                    skills: [
+                        "Probability Distributions",
+                        "Bayes Theorem",
+                        "Maximum Likelihood",
+                        "Expectation & Variance",
+                        "Hypothesis Testing",
+                        "Confidence Intervals",
+                        "A/B Testing",
+                        "Statistical Significance",
+                        "p-values",
+                        "Effect Sizes"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Statistical Analysis Dashboard",
+                            description: "Analyze real dataset with distribution fitting, hypothesis testing, and visualizations",
+                            difficulty: "beginner",
+                        },
+                        {
+                            title: "A/B Test Framework",
+                            description: "Build testing framework with power analysis and statistical significance calculations",
+                            difficulty: "beginner",
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "1.3 Python for ML Engineering",
+                    description: "Advanced Python and data manipulation",
+                    skills: [
+                        "Python 3.11+",
+                        "NumPy Advanced",
+                        "Pandas Pro",
+                        "Polars",
+                        "PyArrow",
+                        "Data Cleaning",
+                        "Feature Engineering",
+                        "Matplotlib",
+                        "Seaborn",
+                        "Plotly",
+                        "Jupyter Best Practices"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Data Pipeline Library",
+                            description: "Create reusable data processing library with Polars for high performance",
+                            difficulty: "beginner",
+                        },
+                        {
+                            title: "Exploratory Data Analysis Tool",
+                            description: "Automated EDA with outlier detection, correlation analysis, and interactive visualizations",
+                            difficulty: "beginner",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            order: 2,
+            title: "Phase 2: Classical Machine Learning",
+            description: "Supervised and unsupervised learning algorithms",
+            topics: [
+                {
+                    order: 1,
+                    title: "2.1 Supervised Learning",
+                    description: "Regression and classification algorithms",
+                    skills: [
+                        "Linear & Logistic Regression",
+                        "Decision Trees",
+                        "Random Forest",
+                        "Gradient Boosting",
+                        "XGBoost",
+                        "LightGBM",
+                        "CatBoost",
+                        "SVM",
+                        "Naive Bayes",
+                        "KNN",
+                        "Ensemble Methods",
+                        "Stacking & Blending"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "House Price Prediction",
+                            description: "End-to-end regression with feature engineering, model comparison, and hyperparameter tuning",
+                            difficulty: "intermediate",
+                        },
+                        {
+                            title: "Credit Card Fraud Detection",
+                            description: "Handle imbalanced data with SMOTE, compare multiple algorithms, optimize for precision/recall",
+                            difficulty: "intermediate",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "2.2 Feature Engineering",
+                    description: "Creating powerful features from raw data",
+                    skills: [
+                        "Numerical Features",
+                        "Categorical Encoding",
+                        "Target Encoding",
+                        "Feature Scaling",
+                        "Binning & Discretization",
+                        "Polynomial Features",
+                        "Feature Selection",
+                        "Mutual Information",
+                        "Feature Importance",
+                        "SHAP Values",
+                        "LIME"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Feature Engineering Pipeline",
+                            description: "Automated feature generation and selection pipeline with validation",
+                            difficulty: "intermediate",
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "2.3 Unsupervised Learning",
+                    description: "Clustering and dimensionality reduction",
+                    skills: [
+                        "K-Means",
+                        "DBSCAN",
+                        "Hierarchical Clustering",
+                        "Gaussian Mixture Models",
+                        "PCA",
+                        "t-SNE",
+                        "UMAP",
+                        "Autoencoders",
+                        "Anomaly Detection",
+                        "Isolation Forest",
+                        "One-Class SVM"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Customer Segmentation",
+                            description: "RFM analysis with multiple clustering algorithms and segment profiling",
+                            difficulty: "intermediate",
+                        },
+                        {
+                            title: "Network Intrusion Detection",
+                            description: "Anomaly detection system with multiple algorithms and real-time scoring",
+                            difficulty: "intermediate",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 4,
+                    title: "2.4 Model Selection & Validation",
+                    description: "Choosing and validating models",
+                    skills: [
+                        "Cross-Validation",
+                        "Stratified K-Fold",
+                        "Time Series Split",
+                        "Hyperparameter Tuning",
+                        "Grid Search",
+                        "Random Search",
+                        "Bayesian Optimization",
+                        "Optuna",
+                        "Ray Tune",
+                        "Evaluation Metrics",
+                        "ROC-AUC",
+                        "Precision-Recall"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "AutoML Framework",
+                            description: "Automated model selection with Optuna optimization and extensive evaluation",
+                            difficulty: "intermediate",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            order: 3,
+            title: "Phase 3: Deep Learning & Neural Networks",
+            description: "Neural networks and modern deep learning",
+            topics: [
+                {
+                    order: 1,
+                    title: "3.1 Neural Network Fundamentals",
+                    description: "Building blocks of deep learning",
+                    skills: [
+                        "Perceptrons",
+                        "Backpropagation",
+                        "Activation Functions",
+                        "Loss Functions",
+                        "Optimizers (SGD, Adam, AdamW)",
+                        "Learning Rate Scheduling",
+                        "Batch Normalization",
+                        "Layer Normalization",
+                        "Dropout",
+                        "Weight Initialization",
+                        "Regularization (L1, L2)"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Neural Network from Scratch",
+                            description: "Implement MLP with backpropagation in pure NumPy",
+                            difficulty: "intermediate",
+                        },
+                        {
+                            title: "Gradient Descent Visualizer",
+                            description: "Interactive tool showing optimization algorithms on different loss landscapes",
+                            difficulty: "intermediate",
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "3.2 PyTorch & TensorFlow",
+                    description: "Modern deep learning frameworks",
+                    skills: [
+                        "PyTorch Basics",
+                        "TensorFlow/Keras",
+                        "Tensors & Operations",
+                        "Autograd",
+                        "Custom Layers",
+                        "Custom Loss Functions",
+                        "GPU Acceleration",
+                        "Mixed Precision Training",
+                        "Gradient Accumulation",
+                        "Model Checkpointing",
+                        "TensorBoard"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Tabular Data Neural Network",
+                            description: "Build deep learning model for structured data with embeddings for categorical features",
+                            difficulty: "intermediate",
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "3.3 Computer Vision",
+                    description: "CNNs and modern vision architectures",
+                    skills: [
+                        "CNNs",
+                        "Convolution Operations",
+                        "Pooling Layers",
+                        "ResNet",
+                        "EfficientNet",
+                        "Vision Transformers (ViT)",
+                        "Transfer Learning",
+                        "Data Augmentation",
+                        "Object Detection (YOLO, R-CNN)",
+                        "Segmentation (U-Net)",
+                        "Image Classification"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Medical Image Classifier",
+                            description: "CNN for disease detection with transfer learning, data augmentation, and Grad-CAM visualization",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                        {
+                            title: "Real-Time Object Detector",
+                            description: "YOLOv8 deployment with webcam integration and performance optimization",
+                            difficulty: "advanced",
+                        },
+                    ],
+                },
+                {
+                    order: 4,
+                    title: "3.4 Natural Language Processing",
+                    description: "NLP and sequence models",
+                    skills: [
+                        "RNNs & LSTMs",
+                        "GRUs",
+                        "Attention Mechanism",
+                        "Transformers",
+                        "BERT",
+                        "Word Embeddings (Word2Vec, GloVe)",
+                        "Sentence Transformers",
+                        "Text Classification",
+                        "Named Entity Recognition",
+                        "Sequence Labeling",
+                        "Fine-Tuning"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Sentiment Analysis API",
+                            description: "Fine-tune BERT for domain-specific sentiment with FastAPI deployment",
+                            difficulty: "advanced",
+                        },
+                        {
+                            title: "Named Entity Recognition System",
+                            description: "Custom NER model with CRF layer and active learning for labeling",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            order: 4,
+            title: "Phase 4: ML Engineering & Production",
+            description: "Taking ML models to production",
+            topics: [
+                {
+                    order: 1,
+                    title: "4.1 Data Engineering for ML",
+                    description: "Building data pipelines",
+                    skills: [
+                        "Apache Airflow",
+                        "Prefect",
+                        "Dagster",
+                        "Apache Spark",
+                        "Dask",
+                        "Ray",
+                        "Data Validation (Great Expectations)",
+                        "Data Quality",
+                        "ETL/ELT Patterns",
+                        "Data Versioning (DVC)",
+                        "SQL Optimization"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "ML Data Pipeline",
+                            description: "Airflow DAG for data ingestion, validation, feature engineering, with monitoring",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "4.2 Feature Store & Management",
+                    description: "Online and offline features",
+                    skills: [
+                        "Feast",
+                        "Tecton",
+                        "Feature Serving",
+                        "Feature Reuse",
+                        "Point-in-Time Correctness",
+                        "Online vs Offline Features",
+                        "Feature Monitoring",
+                        "Feature Lineage"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Feature Store Implementation",
+                            description: "Build feature store with Feast for batch and real-time serving",
+                            difficulty: "advanced",
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "4.3 Model Deployment & Serving",
+                    description: "Production model serving",
+                    skills: [
+                        "FastAPI",
+                        "Flask",
+                        "Docker",
+                        "Kubernetes",
+                        "Model Serialization",
+                        "ONNX",
+                        "TensorFlow Lite",
+                        "Model Optimization",
+                        "Quantization",
+                        "Batch Prediction",
+                        "Real-Time Inference",
+                        "Load Balancing"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Multi-Model Serving API",
+                            description: "Deploy sklearn, PyTorch, TensorFlow models with unified REST API and ONNX optimization",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                        {
+                            title: "Batch Prediction Pipeline",
+                            description: "Scalable batch inference with Spark and model versioning",
+                            difficulty: "advanced",
+                        },
+                    ],
+                },
+                {
+                    order: 4,
+                    title: "4.4 MLOps & Experiment Tracking",
+                    description: "Managing ML lifecycle",
+                    skills: [
+                        "MLflow",
+                        "Weights & Biases",
+                        "Experiment Tracking",
+                        "Model Registry",
+                        "Model Versioning",
+                        "Metadata Management",
+                        "Hyperparameter Tracking",
+                        "Artifact Storage",
+                        "CI/CD for ML",
+                        "Automated Retraining"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Complete MLOps Pipeline",
+                            description: "Training with experiment tracking, model registry, automated deployment, and rollback",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            order: 5,
+            title: "Phase 5: Advanced ML & Optimization",
+            description: "Distributed training and model optimization",
+            topics: [
+                {
+                    order: 1,
+                    title: "5.1 Model Monitoring & Observability",
+                    description: "Tracking production ML performance",
+                    skills: [
+                        "Data Drift Detection",
+                        "Model Drift",
+                        "Evidently AI",
+                        "WhyLabs",
+                        "Performance Monitoring",
+                        "Prediction Logging",
+                        "Prometheus",
+                        "Grafana",
+                        "Alerting",
+                        "SLA Monitoring"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "ML Monitoring Dashboard",
+                            description: "Real-time monitoring with drift detection, performance metrics, and automated alerts",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "5.2 Distributed Training",
+                    description: "Training at scale",
+                    skills: [
+                        "Data Parallelism",
+                        "Model Parallelism",
+                        "PyTorch DDP",
+                        "Horovod",
+                        "DeepSpeed",
+                        "FSDP",
+                        "Ray Train",
+                        "Multi-GPU Training",
+                        "Multi-Node Training",
+                        "Gradient Checkpointing"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Distributed Training Pipeline",
+                            description: "Multi-GPU training with Ray or DeepSpeed on large dataset",
+                            difficulty: "advanced",
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "5.3 Model Compression & Optimization",
+                    description: "Efficient models for production",
+                    skills: [
+                        "Knowledge Distillation",
+                        "Pruning",
+                        "Quantization",
+                        "INT8/FP16",
+                        "TensorRT",
+                        "OpenVINO",
+                        "Neural Architecture Search",
+                        "Model Profiling",
+                        "Latency Optimization",
+                        "Memory Optimization"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Edge Model Deployment",
+                            description: "Compress and deploy model to edge devices with 10x speedup",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 4,
+                    title: "5.4 Advanced Techniques",
+                    description: "State-of-the-art methods",
+                    skills: [
+                        "Meta-Learning",
+                        "Few-Shot Learning",
+                        "Self-Supervised Learning",
+                        "Contrastive Learning",
+                        "Active Learning",
+                        "Curriculum Learning",
+                        "Multi-Task Learning",
+                        "Transfer Learning Advanced",
+                        "Domain Adaptation"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Few-Shot Learning System",
+                            description: "Adapt model to new classes with minimal examples using prototypical networks",
+                            difficulty: "advanced",
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            order: 6,
+            title: "Phase 6: Specialization Tracks",
+            description: "Choose your ML specialization",
+            topics: [
+                {
+                    order: 1,
+                    title: "Track A: Computer Vision Specialist",
+                    description: "Advanced vision systems",
+                    skills: [
+                        "3D Vision",
+                        "Point Clouds",
+                        "NeRF",
+                        "Gaussian Splatting",
+                        "Video Analysis",
+                        "Action Recognition",
+                        "Pose Estimation",
+                        "Face Recognition",
+                        "OCR Advanced",
+                        "Medical Imaging"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "3D Object Reconstruction",
+                            description: "Multi-view 3D reconstruction with neural rendering",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                        {
+                            title: "Video Action Recognition",
+                            description: "Temporal CNN for real-time action classification in videos",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 2,
+                    title: "Track B: NLP/Text Specialist",
+                    description: "Advanced language understanding",
+                    skills: [
+                        "Information Extraction",
+                        "Question Answering",
+                        "Text Summarization",
+                        "Machine Translation",
+                        "Document Understanding",
+                        "Semantic Search",
+                        "Text Generation",
+                        "Dialogue Systems"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Document Intelligence System",
+                            description: "Extract structured data from documents with layout understanding",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 3,
+                    title: "Track C: Recommendation Systems",
+                    description: "Personalization and ranking",
+                    skills: [
+                        "Collaborative Filtering",
+                        "Content-Based Filtering",
+                        "Matrix Factorization",
+                        "Neural Collaborative Filtering",
+                        "Two-Tower Models",
+                        "Ranking Models",
+                        "Learning to Rank",
+                        "Cold Start Problem",
+                        "Diversity & Exploration",
+                        "A/B Testing for RecSys"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Production Recommendation Engine",
+                            description: "Hybrid RecSys with real-time personalization and A/B testing framework",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+                {
+                    order: 4,
+                    title: "Track D: Time Series & Forecasting",
+                    description: "Temporal data analysis",
+                    skills: [
+                        "ARIMA",
+                        "Prophet",
+                        "Temporal Fusion Transformer",
+                        "LSTMs for Time Series",
+                        "Anomaly Detection",
+                        "Seasonality Decomposition",
+                        "Multi-Horizon Forecasting",
+                        "Probabilistic Forecasting",
+                        "Causal Inference"
+                    ],
+                    resources: [],
+                    projects: [
+                        {
+                            title: "Demand Forecasting System",
+                            description: "Multi-model forecasting with probabilistic predictions and uncertainty quantification",
+                            difficulty: "advanced",
+                            isPortfolio: true,
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+    topProjects: [
+        {
+            title: "End-to-End ML Platform",
+            description: "Complete platform with data pipelines, experiment tracking, model serving, monitoring, and auto-retraining",
+            tech: ["Airflow", "MLflow", "FastAPI", "Kubernetes", "PostgreSQL"],
+            impact: "Full ML lifecycle management",
+            difficulty: "advanced",
+            isPortfolio: true,
+        },
+        {
+            title: "Real-Time Fraud Detection System",
+            description: "Streaming ML with Kafka, feature store, sub-100ms latency, 99.9% uptime, and automated retraining",
+            tech: ["Kafka", "Feast", "XGBoost", "Redis", "FastAPI", "Prometheus"],
+            impact: "Production ML at scale",
+            difficulty: "advanced",
+            isPortfolio: true,
+        },
+        {
+            title: "Personalized Recommendation Engine",
+            description: "Neural collaborative filtering with cold-start handling, A/B testing, and 15%+ engagement improvement",
+            tech: ["PyTorch", "Two-Tower", "Feast", "FastAPI", "Redis"],
+            impact: "Demonstrable business value",
+            difficulty: "advanced",
+            isPortfolio: true,
+        },
+        {
+            title: "Medical Imaging Diagnosis System",
+            description: "Multi-label classification with explainability (Grad-CAM), uncertainty quantification, and clinical validation",
+            tech: ["PyTorch", "EfficientNet", "MONAI", "FastAPI", "React"],
+            impact: "High-impact domain application",
+            difficulty: "advanced",
+            isPortfolio: true,
+        },
+        {
+            title: "Intelligent Document Processing",
+            description: "Layout-aware document understanding with table extraction, entity recognition, and structured output",
+            tech: ["LayoutLMv3", "PyTorch", "FastAPI", "PostgreSQL"],
+            impact: "$50K+ cost savings potential",
+            difficulty: "advanced",
+            isPortfolio: true,
+        },
+    ],
+} as const;

@@ -2,6 +2,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Providers } from "@/components/providers";
+import { NavBar } from "@/components/landing/nav-bar";
 import { cn } from "@/lib/utils";
 
 const geist = Geist({
@@ -36,7 +37,8 @@ export default function RootLayout({
         )}
       >
         <Providers>
-          <div className="relative z-10">{children}</div>
+          <NavBar />
+          <div className="relative z-10 pt-20">{children}</div>
         </Providers>
       </body>
     </html>

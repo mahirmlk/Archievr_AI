@@ -52,15 +52,21 @@ export function RealtimeProgressPanel({ initialStats }: { initialStats: Progress
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="space-y-1">
           <CardTitle className="inline-flex items-center gap-2">
-            <Activity className="h-4 w-4 text-neutral-400" />
+            <Activity className="h-4 w-4 text-neutral-500" />
             Real-Time Progress
           </CardTitle>
-          <p className="text-sm text-neutral-400">Auto-refreshes every 15 seconds from your latest activity.</p>
+          <p className="text-xs text-neutral-500">Auto-refreshes every 15s</p>
         </div>
-        <p className="inline-flex items-center gap-1.5 text-xs text-neutral-500">
-          <Clock3 className="h-3.5 w-3.5" />
-          Synced {relativeTime}
-        </p>
+        <div className="flex items-center gap-3">
+          <div className="flex items-center gap-1.5 rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1">
+            <div className="size-1.5 animate-pulse rounded-full bg-neutral-400" />
+            <p className="text-xs text-neutral-500">Live</p>
+          </div>
+          <p className="inline-flex items-center gap-1.5 text-xs text-neutral-500">
+            <Clock3 className="h-3.5 w-3.5" />
+            {relativeTime}
+          </p>
+        </div>
       </div>
 
       <div className="space-y-2">
@@ -82,7 +88,7 @@ export function RealtimeProgressPanel({ initialStats }: { initialStats: Progress
                   {item.value}/{item.total}
                 </p>
               </div>
-              <Progress value={percent} className="h-2.5" />
+              <Progress value={percent} className="h-2" />
             </div>
           );
         })}

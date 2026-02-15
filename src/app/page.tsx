@@ -1,27 +1,74 @@
 import Link from "next/link";
-import { ArrowRight, BrainCircuit, ChartLine, FolderKanban, Sparkles, Target } from "lucide-react";
 import { getSession } from "@/lib/auth";
-import { Card, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { MagicDock } from "@/components/landing/magic-dock";
-import { FlickeringGrid } from "@/components/magicui/flickering-grid";
-import { Button } from "@/components/ui/button";
+import { HeroSection } from "@/components/landing/hero-section";
+import {
+  ArrowRight,
+  Brain,
+  Layers,
+  LineChart,
+  Map as MapIcon,
+  Shield,
+  Sparkles,
+  Target,
+  Workflow,
+} from "lucide-react";
 
-const highlights = [
+const features = [
   {
-    title: "Adaptive Roadmaps",
-    description: "Break your AI and ML journey into focused phases and reorder topics as goals evolve.",
     icon: Target,
+    title: "Adaptive Roadmaps",
+    description:
+      "Break your AI journey into focused phases. Choose from AI Engineer, ML Engineer, or combined paths.",
   },
   {
+    icon: LineChart,
     title: "Progress Intelligence",
-    description: "Track in-progress, completed, and mastered topics with visual analytics across your plan.",
-    icon: ChartLine,
+    description:
+      "Real-time tracking with visual analytics. See completion rates, phase breakdowns, and time estimates.",
   },
   {
+    icon: Layers,
     title: "Resource Library",
-    description: "Attach notes, links, and files to each topic so your study material stays organized.",
-    icon: FolderKanban,
+    description:
+      "Attach notes, links, and files to each topic. Your study material stays organized and contextual.",
+  },
+  {
+    icon: Brain,
+    title: "AI-Powered Insights",
+    description:
+      "Get intelligent recommendations based on your progress, learning pace, and industry trends.",
+  },
+  {
+    icon: Workflow,
+    title: "Multiple Pathways",
+    description:
+      "Choose between specialized tracks: AI Engineer, ML Engineer, or the comprehensive combined roadmap.",
+  },
+  {
+    icon: Shield,
+    title: "Portfolio Projects",
+    description:
+      "Build production-ready projects at each phase. Create a portfolio that demonstrates real-world skills.",
+  },
+] as const;
+
+const roadmapPaths = [
+  {
+    title: "AI Engineer",
+    description: "LLMs, RAG, agents, multimodal AI, production systems",
+    topics: "24 topics · 6 phases",
+  },
+  {
+    title: "ML Engineer",
+    description: "Classical ML, deep learning, MLOps, production pipelines",
+    topics: "24 topics · 6 phases",
+  },
+  {
+    title: "AI/ML Combined",
+    description: "Comprehensive coverage of both AI and ML engineering",
+    topics: "20 topics · 5 phases",
   },
 ] as const;
 
@@ -30,76 +77,101 @@ export default async function HomePage() {
 
   return (
     <>
-      <main className="mx-auto flex w-full max-w-6xl flex-col gap-16 px-4 py-16 pb-28 sm:px-6 lg:px-8">
-        <section className="grid gap-8 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-          <div className="space-y-6">
+      <main className="mx-auto flex w-full max-w-6xl flex-col gap-24 px-4 py-16 pb-28 sm:px-6 lg:px-8">
+        {/* Hero Section */}
+        <HeroSection isAuthenticated={!!session?.user?.id} />
+
+        {/* Roadmap Paths */}
+        <section className="space-y-8">
+          <div className="space-y-3 text-center">
             <Badge className="inline-flex items-center gap-2 font-mono text-xs text-neutral-400">
-              <Sparkles className="size-3.5 text-neutral-400" />
-              /Experience
+              <Sparkles className="size-3.5 text-neutral-500" />
+              Choose Your Path
             </Badge>
-            <div className="space-y-4">
-              <h1 className="text-4xl font-bold tracking-tight text-white sm:text-5xl">
-                Build your machine learning roadmap with clarity and production focus.
-              </h1>
-              <p className="max-w-2xl text-base leading-relaxed text-neutral-400 sm:text-lg">
-                Plan deeply, track progress in real time, and keep resources connected to each topic in one workspace.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-3">
-              <Button asChild size="lg">
-                <Link href={session?.user?.id ? "/dashboard" : "/login"}>
-                  {session?.user?.id ? "Open Dashboard" : "Sign In to Continue"}
-                  <ArrowRight className="ml-2 size-4 text-neutral-900" />
-                </Link>
-              </Button>
-              {!session?.user?.id ? (
-                <Button asChild variant="outline" size="lg">
-                  <Link href="/dashboard">Preview Dashboard Route</Link>
-                </Button>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="relative overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/50 p-8 backdrop-blur-sm">
-            <div className="pointer-events-none absolute inset-0 top-0 left-0 right-0 h-1/2 overflow-hidden">
-              <FlickeringGrid
-                className="h-full w-full"
-                squareSize={2}
-                gridGap={2}
-                style={{
-                  maskImage: "linear-gradient(to bottom, black, transparent)",
-                  WebkitMaskImage: "linear-gradient(to bottom, black, transparent)",
-                }}
-              />
-            </div>
-            <div className="relative space-y-4">
-              <div className="inline-flex size-11 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400">
-                <BrainCircuit className="size-5" />
-              </div>
-              <h2 className="text-2xl font-semibold tracking-tight text-white">Archievr AI Platform</h2>
-              <p className="text-sm leading-relaxed text-neutral-400">
-                Organize your roadmap, track progress, and keep every resource aligned to the exact topic you are learning.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section className="space-y-8 py-8">
-          <div className="flex items-center gap-4">
-            <div className="h-px flex-1 bg-neutral-800" />
-            <span className="rounded-full border border-neutral-800 bg-neutral-900 px-3 py-1 text-xs text-neutral-400">Core Highlights</span>
-            <div className="h-px flex-1 bg-neutral-800" />
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Three specialized roadmaps
+            </h2>
+            <p className="mx-auto max-w-2xl text-sm text-neutral-500">
+              Each roadmap is curated with industry-relevant skills, hands-on projects, and portfolio builders.
+            </p>
           </div>
 
           <div className="grid gap-4 md:grid-cols-3">
-            {highlights.map((item) => (
-              <Card key={item.title} className="h-full">
-                <div className="mb-4 inline-flex size-9 items-center justify-center rounded-full border border-neutral-800 bg-neutral-900 text-neutral-400">
-                  <item.icon className="size-4" />
+            {roadmapPaths.map((path) => (
+              <div
+                key={path.title}
+                className="group overflow-hidden rounded-2xl border border-neutral-800 bg-neutral-900/50 p-6 transition-all duration-200 hover:border-neutral-700"
+              >
+                <div className="space-y-4">
+                  <div className="rounded-lg border border-neutral-800 bg-neutral-900 p-2 text-neutral-500 w-fit">
+                    <MapIcon className="size-4" />
+                  </div>
+
+                  <div>
+                    <h3 className="text-lg font-semibold text-zinc-100">
+                      {path.title}
+                    </h3>
+                    <p className="mt-1 text-sm text-neutral-500">
+                      {path.description}
+                    </p>
+                  </div>
+
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs text-neutral-500">
+                      {path.topics}
+                    </span>
+                    <ArrowRight className="size-4 text-neutral-600 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:text-neutral-400" />
+                  </div>
                 </div>
-                <CardTitle className="mb-2">{item.title}</CardTitle>
-                <p className="text-sm leading-relaxed text-neutral-400">{item.description}</p>
-              </Card>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Features Grid */}
+        <section className="space-y-8">
+          <div className="space-y-3 text-center">
+            <h2 className="text-3xl font-bold tracking-tight text-white sm:text-4xl">
+              Everything you need to master AI/ML
+            </h2>
+            <p className="mx-auto max-w-2xl text-sm text-neutral-500">
+              A complete platform designed for focused, production-level learning.
+            </p>
+          </div>
+
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature) => (
+              <div
+                key={feature.title}
+                className="group rounded-2xl border border-neutral-800 bg-neutral-900/40 p-6 transition-all duration-200 hover:border-neutral-700"
+              >
+                <div className="space-y-3">
+                  <div className="inline-flex size-10 items-center justify-center rounded-lg border border-neutral-800 bg-neutral-900 text-neutral-500 transition-colors group-hover:text-neutral-300">
+                    <feature.icon className="size-5" />
+                  </div>
+                  <h3 className="font-semibold text-zinc-100">{feature.title}</h3>
+                  <p className="text-sm leading-relaxed text-neutral-500">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Stats Banner */}
+        <section className="rounded-2xl border border-neutral-800 bg-neutral-900/40 p-10">
+          <div className="grid gap-8 text-center md:grid-cols-4">
+            {[
+              { label: "Roadmap Tracks", value: "3" },
+              { label: "Total Topics", value: "68+" },
+              { label: "Portfolio Projects", value: "30+" },
+              { label: "Skills Covered", value: "100+" },
+            ].map((stat) => (
+              <div key={stat.label} className="space-y-1">
+                <p className="text-3xl font-bold text-white">{stat.value}</p>
+                <p className="text-sm text-neutral-500">{stat.label}</p>
+              </div>
             ))}
           </div>
         </section>

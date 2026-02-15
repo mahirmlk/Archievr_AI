@@ -27,27 +27,62 @@ function LoginPageContent() {
   const searchParams = useSearchParams();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [signupError, setSignupError] = useState<string | null>(null);
   const error = searchParams.get("error");
   const errorText = useMemo(() => authErrorMessage(error), [error]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    
+    setSignupError(null);
+
     try {
-      const result = await signIn("credentials", {
-        email,
-        password,
-        callbackUrl: "/dashboard",
-        redirect: true,
-      });
-      
-      if (result?.error) {
-        console.error("Sign in error:", result.error);
+      if (isSignUp) {
+        // Handle signup
+        const response = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, name }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setSignupError(data.error || "Signup failed");
+          setLoading(false);
+          return;
+        }
+
+        // After successful signup, sign in automatically
+        const result = await signIn("credentials", {
+          email,
+          password,
+          callbackUrl: "/dashboard",
+          redirect: true,
+        });
+
+        if (result?.error) {
+          console.error("Auto sign-in error:", result.error);
+        }
+      } else {
+        // Handle login
+        const result = await signIn("credentials", {
+          email,
+          password,
+          callbackUrl: "/dashboard",
+          redirect: true,
+        });
+
+        if (result?.error) {
+          console.error("Sign in error:", result.error);
+        }
       }
     } catch (err) {
-      console.error("Sign in error:", err);
+      console.error("Authentication error:", err);
+      setSignupError("An unexpected error occurred");
     } finally {
       setLoading(false);
     }
@@ -99,17 +134,34 @@ function LoginPageContent() {
           <div className="mx-auto w-fit rounded-full border border-neutral-800 bg-neutral-900 p-3 text-neutral-400">
             <BrainCircuit className="h-5 w-5" />
           </div>
-          <CardTitle>Sign In</CardTitle>
-          <p className="text-sm text-neutral-400">Track progress and customize your machine learning roadmap.</p>
+          <CardTitle>{isSignUp ? "Create Account" : "Sign In"}</CardTitle>
+          <p className="text-sm text-neutral-400">
+            {isSignUp
+              ? "Join Archievr AI to start your machine learning journey."
+              : "Track progress and customize your machine learning roadmap."}
+          </p>
         </div>
 
-        {errorText && (
+        {(errorText || signupError) && (
           <p className="rounded-lg border border-red-900 bg-red-950/40 p-3 text-sm text-red-200">
-            {errorText}
+            {signupError || errorText}
           </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
+          {isSignUp && (
+            <div className="space-y-2">
+              <Label htmlFor="name">Full Name</Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+              />
+            </div>
+          )}
           <div className="space-y-2">
             <Label htmlFor="email">Email</Label>
             <Input
@@ -133,14 +185,26 @@ function LoginPageContent() {
             />
           </div>
           <Button className="w-full" type="submit" disabled={loading}>
-            {loading ? "Signing in..." : "Sign in"}
+            {loading ? (isSignUp ? "Creating account..." : "Signing in...") : (isSignUp ? "Create Account" : "Sign in")}
             <ArrowRight className="ml-2 h-4 w-4 text-neutral-400" />
           </Button>
         </form>
-        <div className="relative text-center">
-          <Link href="/" className="text-xs text-neutral-400 transition-colors hover:text-white">
-            Return to home
-          </Link>
+        <div className="relative text-center space-y-2">
+          <button
+            type="button"
+            onClick={() => {
+              setIsSignUp(!isSignUp);
+              setSignupError(null);
+            }}
+            className="text-sm text-neutral-400 transition-colors hover:text-white"
+          >
+            {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
+          </button>
+          <div>
+            <Link href="/" className="text-xs text-neutral-400 transition-colors hover:text-white">
+              Return to home
+            </Link>
+          </div>
         </div>
       </Card>
     </main>
